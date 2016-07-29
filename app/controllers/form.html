@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+<!--
+@page {
+	margin: 10px
+}
+
+.title{	
+	font: bolder;
+	border-width: 2px;
+	background-color: blue;
+	text-align: center;
+	text-shadow: aqua;
+	font-weight: bold;
+	font-size: 12pt;
+	color: white;
+}
+
+table{
+    width:80%;
+    border-width: 2px;
+}
+
+td{
+	width: 50%;
+    font-size: 10pt;
+   	height: 10pt;
+}
+-->
+</style>
+<body >
+	<h2 align="center" style="height: 14pt">CONTROL DE '.$aob.'</h2>
+	<h3 align="center" style="height: 13pt">Correlativo:'.$formulario->f_correlativo.'</h3>
+	<h4 align="center" style="height: 12pt">Fecha: '.$fechaHoy.'</h4>
+	<table border="1" align="center">
+		<tbody>
+            <tr>
+				<td class="title" colspan="2">Descripcion del activo o bien</td>
+			</tr>
+			<tr>
+				<td align="left">Tipo:</td><td align="center">'.$inventario->i_tipo.'</td>
+			</tr>
+			<tr>
+				<td align="left">Descripcion:</td><td align="center">'.$inventario->i_descripcion.'</td>
+			</tr>
+			<tr>
+				<td align="left">Marca:</td><td align="center">'.$inventario->i_marca.'</td>
+			</tr>
+			<tr>
+				<td align="left">Modelo:</td><td align="center">'.$inventario->i_modelo.'</td>
+			</tr>
+			<tr>
+				<td align="left">Color:</td><td align="center">'.$inventario->i_color.'</td>
+			</tr>
+			<tr>
+				<td align="left">No. Serie:</td><td align="center">'.$inventario->i_serie.'</td>
+			</tr>
+			<tr>
+				<td align="left">No. Inventario:</td><td align="center">'.$inventario->i_correlativo.'</td>
+			</tr>
+			<tr>
+				<td align="left">Otros:</td><td align="center">'.$inventario->i_otros.'</td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="0" align="center">
+		<tbody>
+            <tr>
+				<td class="title" colspan="3">Tipo de Movimiento</td>
+			</tr>
+			<tr>
+				<td>Ingreso <input type="checkbox" checked value="input type checkbox" /></td>	
+				<td>Traslado <input type="checkbox" value="input type checkbox" /></td>	
+				<td>Baja <input type="checkbox" value="input type checkbox" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="1" align="center">
+		<tbody>
+            <tr>
+				<td class="title" colspan="2">Datos Ingreso</td>
+			</tr>
+			<tr>
+				<td align="left">Proveedor:</td><td align="center">'.$formulario->f_proveedor.'</td>
+			</tr>
+			<tr>
+				<td align="left">Valor:</td><td align="center">'.$inventario->i_vadquisicion.'</td>
+			</tr>
+			<tr>
+				<td align="left">Departamento Asignado:</td><td align="center">'.$dept->d_nombre.'</td>
+			</tr>
+			<tr>
+				<td align="left">Usuario:</td><td align="center">'.$usuario->u_nombre.'</td>
+			</tr>
+			<tr>
+				<td align="left">No. Documento de Compra:</td><td align="center">'.$formulario->f_documento.'</td>
+			</tr>
+			<tr>
+				<td align="left">Fecha Compra:</td><td align="center">'.$formulario->f_fechacompra.'</td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="1" align="center">
+		<tbody>
+            <tr>
+				<td class="title" colspan="2">Datos Traslado</td>
+			</tr>
+			<tr>
+				<td align="left">Dept. Anterior:</td><td align="center"></td>
+			</tr>
+			<tr>
+				<td align="left">Usuario Anterior:</td><td align="center"></td>
+			</tr>
+			<tr>
+				<td align="left">Dept. que Recibe:</td><td align="center"></td>
+			</tr>
+			<tr>
+				<td align="left">Usuario que Recibe:</td><td align="center"></td>
+			</tr>
+			<tr>
+				<td align="left">Fecha de Traslado:</td><td align="center"></td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="1" align="center">
+		<tbody>
+			<tr>
+				<td class="title" colspan="2">Datos Baja</td>
+			</tr>
+			<tr>
+				<td align="left">Motivo de Baja:</td><td align="center"></td>
+			</tr>
+			<tr>
+				<td align="left">Fecha de Baja:</td><td align="center"></td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="0" align="center">
+		<tbody>
+			<tr>
+				<td align="left" style="width:25%">Elaborado por:</td><td align="center" style="width:25%">'.$usuario2->u_nombre.'</td>
+				<td align="left" style="width:25%">Autorizado por:</td><td align="center" style="width:25%"></td>
+			</tr>
+			<tr>
+				<td align="left" style="width:25%">Firma:</td><td align="center" style="width:25%"></td>
+				<td align="left" style="width:25%">Firma:</td><td align="center" style="width:25%"></td>
+			</tr>
+		</tbody>
+	</table>
+	<nobr>&nbsp;</nobr>
+	<table border="0" align="center">
+		<tbody>
+			<tr>
+				<td align="left">Recibido en Contabilidad por:</td><td>____________________</td>
+			</tr><tr>
+				<td align="left">Fecha:</td><td>____________________</td>
+			</tr><tr>
+				<td align="left">Firma:</td><td>____________________</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	
+	
+</body>
+</html>

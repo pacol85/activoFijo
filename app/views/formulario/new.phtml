@@ -1,0 +1,166 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(array("formulario", "Go Back")) ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>
+        Create formulario
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "formulario/create",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldFFecha" class="col-sm-2 control-label">F Of Fecha</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_fecha", "size" => 30, "class" => "form-control", "id" => "fieldFFecha")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIId" class="col-sm-2 control-label">I</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("i_id", "size" => 30, "class" => "form-control", "id" => "fieldIId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFMovimiento" class="col-sm-2 control-label">F Of Movimiento</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_movimiento", "type" => "number", "class" => "form-control", "id" => "fieldFMovimiento")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFDocumento" class="col-sm-2 control-label">F Of Documento</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_documento", "size" => 30, "class" => "form-control", "id" => "fieldFDocumento")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFProveedor" class="col-sm-2 control-label">F Of Proveedor</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_proveedor", "size" => 30, "class" => "form-control", "id" => "fieldFProveedor")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFUanterior" class="col-sm-2 control-label">F Of Uanterior</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_uanterior", "size" => 30, "class" => "form-control", "id" => "fieldFUanterior")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFFechacompra" class="col-sm-2 control-label">F Of Fechacompra</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_fechacompra", "type" => "date", "class" => "form-control", "id" => "fieldFFechacompra")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFAdept" class="col-sm-2 control-label">F Of Adept</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_adept", "size" => 30, "class" => "form-control", "id" => "fieldFAdept")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFNdept" class="col-sm-2 control-label">F Of Ndept</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_ndept", "size" => 30, "class" => "form-control", "id" => "fieldFNdept")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFUnuevo" class="col-sm-2 control-label">F Of Unuevo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_unuevo", "size" => 30, "class" => "form-control", "id" => "fieldFUnuevo")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFFechamov" class="col-sm-2 control-label">F Of Fechamov</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_fechamov", "type" => "date", "class" => "form-control", "id" => "fieldFFechamov")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFMotivobaja" class="col-sm-2 control-label">F Of Motivobaja</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_motivobaja", "size" => 30, "class" => "form-control", "id" => "fieldFMotivobaja")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFElaboradopor" class="col-sm-2 control-label">F Of Elaboradopor</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_elaboradopor", "size" => 30, "class" => "form-control", "id" => "fieldFElaboradopor")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFAutorizadopor" class="col-sm-2 control-label">F Of Autorizadopor</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_autorizadopor", "size" => 30, "class" => "form-control", "id" => "fieldFAutorizadopor")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFPersonaconta" class="col-sm-2 control-label">F Of Personaconta</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_personaconta", "size" => 30, "class" => "form-control", "id" => "fieldFPersonaconta")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFFecharevisado" class="col-sm-2 control-label">F Of Fecharevisado</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_fecharevisado", "type" => "date", "class" => "form-control", "id" => "fieldFFecharevisado")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFCorrelativo" class="col-sm-2 control-label">F Of Correlativo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_correlativo", "type" => "number", "class" => "form-control", "id" => "fieldFCorrelativo")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFTipoinventario" class="col-sm-2 control-label">F Of Tipoinventario</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_tipoinventario", "type" => "number", "class" => "form-control", "id" => "fieldFTipoinventario")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Save", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

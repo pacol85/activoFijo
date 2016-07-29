@@ -1,0 +1,193 @@
+<link rel="stylesheet" type="text/css" href="css/elements.css">
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#inv').DataTable();
+	var hoy = new Date();
+	$('#mes').val(hoy.getMonth()+1);	
+});
+</script>
+
+<style>
+.ui-datepicker-calendar {
+    display: none;
+    }
+</style>
+
+<div class="page-header">
+    <h1>
+        Movimientos del Mes
+    </h1>
+</div>
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "formulario/listado",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+<div class="form-group">
+    <label for="opciones" class="col-sm-12">Seleccionar A&ntilde;o y Mes</label>    
+</div>
+<div class="form-group">
+    <label for="anio" class="col-sm-2 control-label">A&ntilde;o:</label>
+    <div class="col-sm-10">
+        <?php
+        $anios = Formulario::find();        
+        $list = array();
+        foreach ($anios as $anio){
+        	$a = date('Y', strtotime($anio->f_fecha));
+        	//$a = date_format($anio->f_fecha, 'Y');
+        	if(!array_key_exists($a, $list)){
+        		$list[$a] = $a;
+        	}        	        	
+        }
+        krsort($list);
+        echo $this->tag->select(array("anio", $list, "class" => "form-control", "id" => "anio")) ?>  
+    </div>
+</div>
+<div class="form-group">
+    <label for="mes" class="col-sm-2 control-label">Mes:</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->select(array("mes", array("1" => "Enero", "2" => "Febrero",
+        		"3" => "Marzo", "4" => "Abril", "5" => "Mayo", "6" => "Junio",
+        		"7" => "Julio", "8" => "Agosto", "9" => "Septiembre", "10" => "Octubre",
+        		"11" => "Noviembre", "12" => "Diciembre"),"class" => "form-control", "id" => "mes"
+        )) ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-1 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Cargar", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+<nobr>&nbsp;</nobr>
+<div class="form-group">
+    <label for="txMov" class="col-sm-2 control-label">Total por movimientos:</label>
+    <div class="col-sm-10">
+    	<label for="mov" class="col-sm-10">
+        <?php 
+        $movMes = $this->session->get("mov");
+        echo "$ ".number_format($movMes,2);
+        ?>
+        </label>
+    </div>
+</div>
+<div class="form-group">
+    <label for="txTotal" class="col-sm-2 control-label">Total a este mes:</label>
+    <div class="col-sm-10">
+    	<label for="totalMes" class="col-sm-10">
+        <?php 
+        $totalMes = $this->session->get("total");
+        echo "$ ".number_format($totalMes,2);
+        ?>
+        </label>
+    </div>
+</div>
+<?php echo $this->tag->endForm(); ?>
+<nobr>&nbsp;</nobr>
+<div id="tdiv">
+<table id="inv" class="display" cellspacing="0">
+<thead><tr>
+	<th>Formulario</th>
+	<th>Tipo</th>
+	<th>Fecha</th>
+	<th>Inventario</th>
+	<th>Serie</th>
+	<th>Proveedor</th>
+	<th>Movimiento</th>	
+	<th>Valor Adquisici&oacute;n</th>
+	<th>Acciones</th>				
+</tr></thead>
+<tbody>
+<?php
+	$search = $this->session->get("search");
+	if($search != null && $search != ""){
+		$flist = Formulario::find(array($search));
+	}else{
+		$actual = date("Y-m");
+		$flist = Formulario::find(array("f_fecha > '$actual'"));//date_format(current_date, '%Y-%m'");
+	}
+	//echo "<tr><td colspan='9'>$actual</td></tr>";
+	foreach ($flist as $f){
+		echo "<tr>";
+		echo "<td>$f->f_correlativo</td>";
+		echo "<td>";
+		if($f->f_tipoinventario == 1){
+			echo "Activo Fijo";
+		}else echo "Gasto";
+		echo "</td>";
+		echo "<td>".date("Y-m-d",strtotime($f->f_fecha))."</td>";
+		$inv = Inventario::findFirst("i_id = $f->i_id");		
+		echo "<td>$inv->i_correlativo</td>";
+		echo "<td>$inv->i_serie</td>";
+		echo "<td>$inv->i_proveedor</td>";
+		echo "<td>";
+		if($f->f_movimiento == 1){
+			echo "Ingreso";
+		}elseif ($f->f_movimiento == 2){
+			echo "Traslado";
+		}else echo "Baja";
+		echo "</td>";
+		echo "<td>$ ".number_format($inv->i_vadquisicion,2)."</td>";
+		echo "<td><a href='formulario/reimprime2?c=$f->f_correlativo&t=$f->f_tipoinventario'>Reimprimir</a></td>";
+		echo "</tr>";
+	}
+?>
+</tbody>
+</table>
+</div>
+
+<div id="pop">
+<!-- Popup Div Starts Here -->
+<div id="popupCorr">
+<!-- AgregaCorr Popup -->
+<?php
+    echo $this->tag->form(
+        array(
+            "inventario/agregaCorr",
+            "autocomplete" => "off",
+            "class" => "form-horizontal",
+        	"id" => "popf"
+        )
+    );
+    /*
+     <hr>
+
+    <div class="form-group">
+    <div class="col-sm-2">
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-2">
+    </div>
+</div>
+
+     */
+?>
+<img id="close" src="images/x.png" onclick ="div_hide()">
+<hr>
+<h2>Agregar Correlativo</h2>
+<div class="form-group">
+    <div class="col-sm-12" id="serie">
+        
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <?php echo $this->tag->textField(array("corr", "size" => 30, "class" => "form-control", "id" => "fcorr")) ?>
+    </div>
+</div>
+<?php echo $this->tag->hiddenField(array("iid", "size" => 30, "class" => "form-control", "id" => "fiid")) ?>
+<div class="form-group">
+    <div class="col-sm-12">
+        <?php echo $this->tag->submitButton(array("Agregar", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+<?php echo $this->tag->endForm(); ?>
+</div>
+<!-- Popup Div Ends Here -->
+</div>

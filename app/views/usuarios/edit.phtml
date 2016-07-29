@@ -1,0 +1,119 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(array("usuarios", "Back")) ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>
+        Edit usuarios
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "usuarios/save",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldUNombre" class="col-sm-2 control-label">U Of Nombre</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_nombre", "size" => 30, "class" => "form-control", "id" => "fieldUNombre")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUApellido" class="col-sm-2 control-label">U Of Apellido</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_apellido", "size" => 30, "class" => "form-control", "id" => "fieldUApellido")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldULanid" class="col-sm-2 control-label">U Of Lanid</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_lanid", "size" => 30, "class" => "form-control", "id" => "fieldULanid")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUContrasena" class="col-sm-2 control-label">U Of Contrasena</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_contrasena", "size" => 30, "class" => "form-control", "id" => "fieldUContrasena")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUCreacion" class="col-sm-2 control-label">U Of Creacion</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_creacion", "size" => 30, "class" => "form-control", "id" => "fieldUCreacion")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUModificacion" class="col-sm-2 control-label">U Of Modificacion</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_modificacion", "size" => 30, "class" => "form-control", "id" => "fieldUModificacion")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUEstado" class="col-sm-2 control-label">U Of Estado</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_estado", "type" => "number", "class" => "form-control", "id" => "fieldUEstado")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUCodigo" class="col-sm-2 control-label">U Of Codigo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_codigo", "size" => 30, "class" => "form-control", "id" => "fieldUCodigo")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUEid" class="col-sm-2 control-label">U Of Eid</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_eid", "size" => 30, "class" => "form-control", "id" => "fieldUEid")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldDId" class="col-sm-2 control-label">D</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("d_id", "size" => 30, "class" => "form-control", "id" => "fieldDId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUTipo" class="col-sm-2 control-label">U Of Tipo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_tipo", "type" => "number", "class" => "form-control", "id" => "fieldUTipo")) ?>
+    </div>
+</div>
+
+
+<?php echo $this->tag->hiddenField("id") ?>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Save", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

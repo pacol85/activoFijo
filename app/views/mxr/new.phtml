@@ -1,0 +1,54 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(array("mxr", "Go Back")) ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>
+        Create mxr
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "mxr/create",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldRId" class="col-sm-2 control-label">R</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("r_id", "size" => 30, "class" => "form-control", "id" => "fieldRId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldMId" class="col-sm-2 control-label">M</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("m_id", "size" => 30, "class" => "form-control", "id" => "fieldMId")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Save", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

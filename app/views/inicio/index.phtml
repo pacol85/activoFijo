@@ -1,0 +1,34 @@
+<?php 
+	$usuario = $this->session->get("usuario");
+	$user = Usuarios::findFirst($usuario); 
+	echo "<h1>Bienvenido/a $user->u_nombre $user->u_apellido</h1>";
+?>
+<script type="text/javascript" language="javascript" class="init">
+	$(document).ready(function() {
+		$('#activos').DataTable();
+	} );
+</script>
+<h2>Activos y Bienes asociados al usuario</h2>
+<div id="tdiv" style="font-size:0.7em;">
+<table id="activos" class="display" cellspacing="0" width="100%" >
+<thead><tr>
+	<th>Correlativo</th>
+	<th>Descripcion</th>
+	<th>Ubicaci&oacute;n</th>
+	<th>Observaciones</th>		
+</tr></thead>
+<tbody>
+<?php
+	$bienesList = Inventario::find("(i_activo = 1 or i_activo = 2) and i_estado = 1 and u_id = '$usuario'");
+	foreach ($bienesList as $bien){
+		echo "<tr>";
+		echo "<td>$bien->i_correlativo</td>";
+		echo "<td>$bien->i_descripcion</td>";
+		echo "<td>$bien->i_ubicacion</td>";
+		echo "<td>$bien->i_observaciones</td>";
+		echo "</tr>";
+	}
+?>
+</tbody>
+</table>
+</div>

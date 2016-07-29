@@ -1,0 +1,66 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.date').mask('0000-00-00');
+
+	$("#fieldInventario").keydown(function (e) {
+	   if (e.which == 9 || e.keyCode === 9){
+		   $.ajax({
+				type: "POST",
+				url: "formulario/loadItem", 
+				data: {inventario: $('#fieldInventario').val()},
+				dataType: "json",
+				success: function(result){
+					var jsondata = jQuery.parseJSON(JSON.stringify(result));
+					$("#fieldTipo").val(jsondata.a);
+					$("#fieldDesc").val(jsondata.b);
+					$("#fieldMarca").val(jsondata.c);
+					$("#fieldModelo").val(jsondata.d);
+					$("#fieldColor").val(jsondata.e);
+					$("#fieldSerie").val(jsondata.f);
+					$("#fieldOtros").val(jsondata.g);
+				}				
+			});
+	   }
+	});
+});
+
+</script>
+
+
+<div class="page-header">
+    <h1>
+        Reimpresi&oacute;n de Formularios
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "formulario/reimprime",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fTipoF" class="col-sm-2 control-label">Tipo de Formulario</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->select(array("tipoF", array("1" => "Activo", "2" => "Bien llevado a Gasto"),"class" => "form-control", "id" => "fTipoF")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fcorr" class="col-sm-2 control-label">Correlativo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("corr", "size" => 30, "class" => "form-control", "id" => "fcorr")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-1 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Reimprimir", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

@@ -1,0 +1,172 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#fieldDept').change(function() {
+		//alert("ingreso paso 2");
+		$.ajax({
+			type: "POST",
+			url: "formulario/listUsers", 
+			data: {dept: $('#fieldDept').val()},
+			dataType: "json",
+			success: function(result){
+				var jsondata = jQuery.parseJSON(JSON.stringify(result)); 
+				$("#udiv").html(jsondata.select);
+			}});
+	});
+
+	$('.date').mask('0000-00-00');
+	$('.datepicker').pickadate();	
+
+	$("#fieldInventario").keydown(function (e) {
+	   if (e.which == 9 || e.keyCode === 9){
+		   $.ajax({
+				type: "POST",
+				url: "formulario/loadItem", 
+				data: {inventario: $('#fieldInventario').val()},
+				dataType: "json",
+				success: function(result){
+					var jsondata = jQuery.parseJSON(JSON.stringify(result));
+					$("#fieldTipo").val(jsondata.a);
+					$("#fieldDesc").val(jsondata.b);
+					$("#fieldMarca").val(jsondata.c);
+					$("#fieldModelo").val(jsondata.d);
+					$("#fieldColor").val(jsondata.e);
+					$("#fieldSerie").val(jsondata.f);
+					$("#fieldOtros").val(jsondata.g);
+					$("#da").val(jsondata.de);
+					$("#ua").val(jsondata.u);
+				}				
+			});
+	   }
+	});
+});
+
+</script>
+
+
+<div class="page-header">
+    <h1>
+        Formulario para Traslado de Activo o Bien llevado a Gasto
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "formulario/trasladar",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldFFecha" class="col-sm-2 control-label">Fecha</label>
+    <div class="col-sm-2 control-label">
+        <?php echo $fecha;?>
+    </div>
+</div>
+<h2>
+	Descripci&oacute;n del Activo o Bien
+</h2>
+<div class="form-group">
+    <label for="fieldInventario" class="col-sm-2 control-label">No. Inventario</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("inventario", "size" => 30, "class" => "form-control", "id" => "fieldInventario")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldTipo" class="col-sm-2 control-label">Tipo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("tipo", "size" => 30, "class" => "form-control", "id" => "fieldTipo")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldDesc" class="col-sm-2 control-label">Descripci&oacute;n</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("desc", "size" => 30, "class" => "form-control", "id" => "fieldDesc")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldMarca" class="col-sm-2 control-label">Marca</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("marca", "size" => 30, "class" => "form-control", "id" => "fieldMarca")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldModelo" class="col-sm-2 control-label">Modelo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("modelo", "size" => 30, "class" => "form-control", "id" => "fieldModelo")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldColor" class="col-sm-2 control-label">Color</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("color", "size" => 30, "class" => "form-control", "id" => "fieldColor")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldSerie" class="col-sm-2 control-label">Serie</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("serie", "size" => 30, "class" => "form-control", "id" => "fieldSerie")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldOtros" class="col-sm-2 control-label">Otros</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("otros", "size" => 30, "class" => "form-control", "id" => "fieldOtros")) ?>
+    </div>
+</div>
+<div class="line"></div>
+<h2>
+	Datos Traslado
+</h2>
+<div class="form-group">
+    <label for="fieldDA" class="col-sm-2 control-label">Dept. Anterior</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("da", "size" => 30, "class" => "form-control", "id" => "da", "readonly" => "")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldUA" class="col-sm-2 control-label">Usuario Anterior</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("ua", "size" => 30, "class" => "form-control", "id" => "ua", "readonly" => "")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldDept" class="col-sm-2 control-label">Dept. que Recibe</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->select(array("dept",
+		    Departamento::find(),
+		    "using" => array("d_id", "d_nombre"), "class" => "form-control", "id" => "fieldDept")) ?>
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldUser" class="col-sm-2 control-label">Usuario que Recibe</label>
+    <div class="col-sm-10" id="udiv">
+        <?php
+        	$d= Departamento::find(array("limit" => 1));
+        	foreach ($d as $did){
+        		echo $this->tag->select(array("user", 
+        				Usuarios::find("u_estado = 1 AND d_id = $did->d_id"),
+        				"using" => array("u_id", "u_nombre"), "class" => "form-control", "id" => "fieldUser")); 
+        	}
+        		?>
+        	
+    </div>
+</div>
+<div class="form-group">
+    <label for="fieldFechaT" class="col-sm-2 control-label">Fecha traslado</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->dateField(array("fechaT", "min" => "0", "size" => 30, "class" => "form-control date datepicker", "id" => "fieldFechaT")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-1 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Trasladar", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

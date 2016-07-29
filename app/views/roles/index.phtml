@@ -1,0 +1,56 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        Search roles
+    </h1>
+    <p>
+        <?php echo $this->tag->linkTo(array("roles/new", "Create roles")) ?>
+    </p>
+</div>
+
+<?php echo $this->getContent() ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "roles/search",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldRId" class="col-sm-2 control-label">R</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("r_id", "size" => 30, "class" => "form-control", "id" => "fieldRId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldRRol" class="col-sm-2 control-label">R Of Rol</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("r_rol", "size" => 30, "class" => "form-control", "id" => "fieldRRol")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldRDescripcion" class="col-sm-2 control-label">R Of Descripcion</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("r_descripcion", "size" => 30, "class" => "form-control", "id" => "fieldRDescripcion")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Search", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

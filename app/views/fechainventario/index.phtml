@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        Search fechainventario
+    </h1>
+    <p>
+        <?php echo $this->tag->linkTo(array("fechainventario/new", "Create fechainventario")) ?>
+    </p>
+</div>
+
+<?php echo $this->getContent() ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "fechainventario/search",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldFId" class="col-sm-2 control-label">F</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_id", "size" => 30, "class" => "form-control", "id" => "fieldFId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFFechainventariado" class="col-sm-2 control-label">F Of Fechainventariado</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_fechainventariado", "type" => "date", "class" => "form-control", "id" => "fieldFFechainventariado")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFComentario" class="col-sm-2 control-label">F Of Comentario</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("f_comentario", "size" => 30, "class" => "form-control", "id" => "fieldFComentario")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIId" class="col-sm-2 control-label">I</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("i_id", "size" => 30, "class" => "form-control", "id" => "fieldIId")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Search", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

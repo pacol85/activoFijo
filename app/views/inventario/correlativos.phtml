@@ -1,0 +1,119 @@
+<link rel="stylesheet" type="text/css" href="css/elements.css">
+<script type="text/javascript">
+$(document).ready(function() {
+	div_hide();
+	$('#inv').DataTable();	
+});
+function div_show(iid) {
+	document.getElementById('pop').style.display = "block";
+	$("#fiid").val(iid);	
+};
+
+function showSerie(serie){
+	var tx = "Serie: ";
+	tx = tx.concat(serie);
+	$("#serie").text(tx);
+};
+
+//Function to Hide Popup
+function div_hide(){
+	document.getElementById('pop').style.display = "none";
+};	
+</script>
+
+<div class="page-header">
+    <h1>
+        Agrega Correlativos a Activos y Bienes
+    </h1>
+</div>
+<div class="form-group">
+    <label for="fieldFFecha" class="col-sm-12 control-label">Utilizar el Bot&oacute;n de Agregar que est&aacute; a un lado de cada &Iacute;tem para poder agregar el correlativo correspondiente</label>    
+</div>
+<nobr>&nbsp;</nobr>
+<div id="tdiv" style="font-size:0.7em;">
+<table id="inv" class="display" cellspacing="0" width="100%" >
+<thead><tr>
+	<th>Acci&oacute;n</th>
+	<th>Serie</th>
+	<th>Marca</th>
+	<th>Modelo</th>
+	<th>Proveedor</th>
+	<th>Descripci&oacute;n</th>	
+	<th>Usuario</th>
+	<th>Fecha Ingreso</th>
+	<th>Valor Adquisici&oacute;n</th>				
+</tr></thead>
+<tbody>
+<?php
+	$invList = Inventario::find("i_estado = 1 and i_correlativo is NULL");
+	foreach ($invList as $inv){
+		echo "<tr>";
+		echo "<td><button id='popup' onclick='div_show($inv->i_id);showSerie(\"$inv->i_serie\");'>Agregar</button></td>";
+		echo "<td>$inv->i_serie</td>";
+		echo "<td>$inv->i_marca</td>";
+		echo "<td>$inv->i_modelo</td>";
+		echo "<td>$inv->i_proveedor</td>";
+		echo "<td>$inv->i_descripcion</td>";
+		$users = Usuarios::find("u_id = $inv->u_id");
+		foreach ($users as $user){
+			echo "<td>$user->u_nombre</td>";
+		}		
+		echo "<td>$inv->i_fingreso</td>";
+		echo "<td>$inv->i_vadquisicion</td>";
+		echo "</tr>";
+	}
+?>
+</tbody>
+</table>
+</div>
+
+<div id="pop">
+<!-- Popup Div Starts Here -->
+<div id="popupCorr">
+<!-- AgregaCorr Popup -->
+<?php
+    echo $this->tag->form(
+        array(
+            "inventario/agregaCorr",
+            "autocomplete" => "off",
+            "class" => "form-horizontal",
+        	"id" => "popf"
+        )
+    );
+    /*
+     <hr>
+
+    <div class="form-group">
+    <div class="col-sm-2">
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-2">
+    </div>
+</div>
+
+     */
+?>
+<img id="close" src="images/x.png" onclick ="div_hide()">
+<hr>
+<h2>Agregar Correlativo</h2>
+<div class="form-group">
+    <div class="col-sm-12" id="serie">
+        
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <?php echo $this->tag->textField(array("corr", "size" => 30, "class" => "form-control", "id" => "fcorr")) ?>
+    </div>
+</div>
+<?php echo $this->tag->hiddenField(array("iid", "size" => 30, "class" => "form-control", "id" => "fiid")) ?>
+<div class="form-group">
+    <div class="col-sm-12">
+        <?php echo $this->tag->submitButton(array("Agregar", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+<?php echo $this->tag->endForm(); ?>
+</div>
+<!-- Popup Div Ends Here -->
+</div>

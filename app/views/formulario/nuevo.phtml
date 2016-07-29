@@ -1,0 +1,107 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+<div class="page-header">
+    <h1>
+        Formulario para Nuevo Activo o Bien llevado a Gasto
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "formulario/guardarNuevo",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldFFecha" class="col-sm-2 control-label">Fecha</label>
+    <div class="col-sm-10">
+        <?php echo fechaHoy(false) ?>
+    </div>
+</div>
+<h2>
+	Descripci&oacute;n del Activo o Bien
+</h2>
+<div class="pure-g l-box">
+	<div class="form-group">
+	    <label for="fieldTipo" class="col-sm-2 control-label">Tipo</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("tipo", "size" => 30, "class" => "form-control", "id" => "fieldTipo")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldDesc" class="col-sm-2 control-label">Descripci&oacute;n</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("desc", "size" => 30, "class" => "form-control", "id" => "fieldDesc")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldMarca" class="col-sm-2 control-label">Marca</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("marca", "size" => 30, "class" => "form-control", "id" => "fieldMarca")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldModelo" class="col-sm-2 control-label">Modelo</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("modelo", "size" => 30, "class" => "form-control", "id" => "fieldModelo")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldColor" class="col-sm-2 control-label">Color</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("color", "size" => 30, "class" => "form-control", "id" => "fieldColor")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldSerie" class="col-sm-2 control-label">Serie</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("serie", "size" => 30, "class" => "form-control", "id" => "fieldSerie")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldColor" class="col-sm-2 control-label">Color</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("color", "size" => 30, "class" => "form-control", "id" => "fieldColor")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldOtros" class="col-sm-2 control-label">Otros</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("otros", "size" => 30, "class" => "form-control", "id" => "fieldOtros")) ?>
+	    </div>
+	</div>
+</div>
+<h2>
+	Datos Ingreso
+</h2>
+<div class="pure-g l-box">
+	<div class="form-group">
+	    <label for="fieldProveedor" class="col-sm-2 control-label">Proveedor</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->textField(array("proveedor", "size" => 30, "class" => "form-control", "id" => "fieldProveedor")) ?>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="fieldValor" class="col-sm-2 control-label">Valor</label>
+	    <div class="col-sm-10">
+	        <?php echo $this->tag->numericField(array("valor", "min" => "0", "size" => 30, "class" => "form-control", "id" => "fieldValor")) ?>
+	    </div>
+	</div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Ingresar", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

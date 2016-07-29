@@ -1,0 +1,61 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(array("departamento", "Go Back")) ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>
+        Create departamento
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "departamento/create",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldDNombre" class="col-sm-2 control-label">D Of Nombre</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("d_nombre", "size" => 30, "class" => "form-control", "id" => "fieldDNombre")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldDDescripcion" class="col-sm-2 control-label">D Of Descripcion</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("d_descripcion", "size" => 30, "class" => "form-control", "id" => "fieldDDescripcion")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUId" class="col-sm-2 control-label">U</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("u_id", "size" => 30, "class" => "form-control", "id" => "fieldUId")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Save", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

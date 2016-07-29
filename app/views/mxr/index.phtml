@@ -1,0 +1,49 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        Search mxr
+    </h1>
+    <p>
+        <?php echo $this->tag->linkTo(array("mxr/new", "Create mxr")) ?>
+    </p>
+</div>
+
+<?php echo $this->getContent() ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "mxr/search",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldRId" class="col-sm-2 control-label">R</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("r_id", "size" => 30, "class" => "form-control", "id" => "fieldRId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldMId" class="col-sm-2 control-label">M</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("m_id", "size" => 30, "class" => "form-control", "id" => "fieldMId")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Search", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>
