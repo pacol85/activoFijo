@@ -59,7 +59,7 @@ function div_hide(){
 			echo "<td>$user->u_nombre</td>";
 		}		
 		echo "<td>$inv->i_fingreso</td>";
-		echo "<td>$inv->i_vadquisicion</td>";
+		echo "<td>$ ".number_format($inv->i_vadquisicion,2)."</td>";
 		echo "</tr>";
 	}
 ?>

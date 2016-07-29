@@ -72,10 +72,10 @@
 		}		
 		echo "<td>$bien->i_observaciones</td>";
 		echo "<td>$bien->i_fingreso</td>";
-		echo "<td>$bien->i_vadquisicion</td>";
-		echo "<td>$bien->i_vresidual</td>";
-		echo "<td>$bien->i_dacumulada</td>";
-		echo "<td>$bien->i_penddepreciar</td>";
+		echo "<td>$ ".number_format($bien->i_vadquisicion,2)."</td>";
+		echo "<td>$ ".number_format($bien->i_vresidual,2)."</td>";
+		echo "<td>$ ".number_format($bien->i_dacumulada,2)."</td>";
+		echo "<td>$ ".number_format($bien->i_penddepreciar,2)."</td>";
 		echo "</tr>";
 	}
 ?>
