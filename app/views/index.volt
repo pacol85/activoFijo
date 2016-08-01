@@ -10,7 +10,7 @@
         <base href="/activoFijo/">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/reset.css">
-		<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'>
+        <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
         <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
@@ -23,6 +23,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script type="text/javascript" language="javascript" src="js/dropdown.js"></script>
         <!-- DataTables -->
         <script type="text/javascript" language="javascript" src="js/jquery.dataTables.js"></script>
         <!-- jQuery Mask -->
@@ -31,6 +32,8 @@
         <script type="text/javascript" language="javascript" src="js/picker.js"></script>
         <script type="text/javascript" language="javascript" src="js/picker.date.js"></script>
         <script type="text/javascript" language="javascript" src="js/es_ES.js"></script>
+        <!-- Fontawesome -->
+        <script src="https://use.fontawesome.com/b88a17f1bf.js"></script>        
     </head>
     <body>
     	<?php
