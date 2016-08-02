@@ -18,6 +18,7 @@
         <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="css/classic.css">
         <link rel="stylesheet" type="text/css" href="css/classic.date.css">
+        <link rel="stylesheet" type="text/css" href="css/otros.css">
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -33,7 +34,11 @@
         <script type="text/javascript" language="javascript" src="js/picker.date.js"></script>
         <script type="text/javascript" language="javascript" src="js/es_ES.js"></script>
         <!-- Fontawesome -->
-        <script src="https://use.fontawesome.com/b88a17f1bf.js"></script>        
+        <script src="https://use.fontawesome.com/b88a17f1bf.js"></script>
+        <!-- ReactJS -->
+        <script src="https://npmcdn.com/react@15.3.0/dist/react.min.js"></script>
+		<script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.min.js"></script>
+        <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>        
     </head>
     <body>
     	<?php

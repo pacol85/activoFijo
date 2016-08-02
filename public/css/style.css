@@ -148,17 +148,3 @@ body {
   color: #fff;
   outline: 0;
 }
-
-.binFull{
-	background-image: url(http://simpleicon.com/wp-content/uploads/inbox-mail-full-3-64x64.png);
-}
-
-.binClear{
-	background-image: url(http://simpleicon.com/wp-content/uploads/inbox-mail-empty-3-64x64.png);
-}
-
-div.topNot{
-	position: absolute;
-	top: 2px;
-	right: 2px;	
-}
