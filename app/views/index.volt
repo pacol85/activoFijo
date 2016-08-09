@@ -38,7 +38,14 @@
         <!-- ReactJS -->
         <script src="https://npmcdn.com/react@15.3.0/dist/react.min.js"></script>
 		<script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.min.js"></script>
-        <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>        
+        <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+        <script type="text/javascript">
+			$(document).ready(function() {
+				$('.date').mask('0000-00-00');
+				$('.datepicker').pickadate();
+				$('.money').mask("#,##0.00", {reverse: true});
+			});
+		</script>        
     </head>
     <body>
     	<?php
