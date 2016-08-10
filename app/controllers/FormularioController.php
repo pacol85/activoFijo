@@ -912,9 +912,6 @@ td{
 	    	}
     	}
     	
-    	$titulo = parent::elemento("h1", ["movMes"], "Movimientos del Mes");
-    	$this->view->titulo = $titulo;
-    	
     	//campos
     	$anios = Formulario::find();
     	$list = array();
@@ -947,8 +944,48 @@ td{
     			["l", [$mm], "Total por movimientos:"],
     			["l", [$t], "Total a este mes:"]
     	];
-    	$form = parent::form($campos, "formulario/listado");
-    	$this->view->form = $form;
+    	
+    	//tabla
+    	$tabla = parent::thead("inv", ["Formulario", "Tipo", "Fecha", "Inventario",
+    			"Serie", "Proveedor", "Movimiento", "Valor Adquisici&oacute;n", "Acciones"]);
+    	
+    	$search = $this->session->get("search");
+    	if($search != null && $search != ""){
+    		$flist = Formulario::find(array($search));
+    	}else{
+    		$actual = date("Y-m");
+    		$flist = Formulario::find(array("f_fecha > '$actual'"));
+    	}
+    	
+    	foreach ($flist as $f){
+    		$tabla = $tabla."<tr>";
+    		if($f->f_tipoinventario == 1){
+    			$tp = "Activo Fijo";
+    		}else $tp ="Gasto";
+    		$inv = Inventario::findFirst("i_id = $f->i_id");
+    		if($f->f_movimiento == 1){
+    			$m = "Ingreso";
+    		}elseif ($f->f_movimiento == 2){
+    			$m =  "Traslado";
+    		}else $m = "Baja";
+    		
+    		$tabla = $tabla.parent::td([
+    				$f->f_correlativo,
+    				$tp,
+    				date("Y-m-d",strtotime($f->f_fecha)),
+    				$inv->i_correlativo,
+    				$inv->i_serie,
+    				$inv->i_proveedor,
+    				$m,
+    				number_format($inv->i_vadquisicion,2),
+    				"<a href='formulario/reimprime2?c=$f->f_correlativo&t=$f->f_tipoinventario'>Reimprimir</a>"
+    		]);
+    	}
+    	
+    	$tabla = parent::elemento("enter", [], "").$tabla;
+    	$this->view->titulo = parent::elemento("h1", ["movMes"], "Movimientos del Mes");
+    	$this->view->form = parent::form($campos, "formulario/listado");
+    	$this->view->tabla = parent::ftable($tabla);
     }
     
     public function totales($mes){

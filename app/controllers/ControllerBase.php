@@ -151,6 +151,14 @@ class ControllerBase extends Controller
 		return $tabla;
 	}
 	
+	public function td($col){
+		$td = "";
+		foreach ($col as $c){
+			$td = $td.'<td>'.$c.'</td>';
+		}
+		return $td; 
+	}
+	
 	public function ftable($tabla){
 		$tabla = $tabla.'</tbody></table></div>';
 		return $tabla;
