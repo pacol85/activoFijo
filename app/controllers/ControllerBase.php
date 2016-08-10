@@ -52,7 +52,7 @@ class ControllerBase extends Controller
 		return $this->response;
 	}
 	
-	public function elemento($t, $n, $l, $c){
+	public function elemento($t, $n, $l){
 		$elem = "";
 		switch ($t){
 			case "h" :
@@ -73,6 +73,12 @@ class ControllerBase extends Controller
 				$elem = $elem.'<div class="form-group"><label for="'.$l.'" class="col-sm-2 control-label">'.$l.'</label>';
 				$elem = $elem.'<div class="col-sm-2 control-label">'.$n[0].'</div></div>';
 				break;
+			case "lf" :
+				$elem = $elem.'<div class="form-group"><label for="'.$n[0].'" class="col-sm-12">'.$l.'</label></div>';
+				break;
+			case "enter" :
+				$elem = $elem.'<nobr>&nbsp;</nobr>';
+				break;
 			default :
 				$elem = '<div class="form-group"><label for="';
 				//agregamos el nombre
@@ -82,7 +88,10 @@ class ControllerBase extends Controller
 				//agrega nombre campo
 				switch ($t){
 					case "t" :
-						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control $c", "id" => "$n[0]", "value" => "$n[1]"));
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]", "value" => "$n[1]"));
+						break;
+					case "m" :
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control money", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
 					case "p" :
 						$elem = $elem.$this->tag->passwordField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]"));
@@ -102,7 +111,11 @@ class ControllerBase extends Controller
 						}						
 		    			break;
 					case "sel" :
-						$elem = $elem.$this->tag->select(array("$n[0]", $n[1], "class" => "form-control", "id" => "$n[0]"));
+						if(count($n) > 2){
+							$elem = $elem.$this->tag->select(array("$n[0]", $n[1], "class" => "form-control", "id" => "$n[0]", "value" => $n[2]));
+						}else{
+							$elem = $elem.$this->tag->select(array("$n[0]", $n[1], "class" => "form-control", "id" => "$n[0]"));
+						}						
 						break;
 				}
 				$elem = $elem.'</div></div>';
@@ -119,7 +132,7 @@ class ControllerBase extends Controller
 				)
 				);
 		foreach ($campos as $c){
-			$elem = ControllerBase::elemento($c[0], $c[1], $c[2], $c[3]);
+			$elem = ControllerBase::elemento($c[0], $c[1], $c[2]);
 			$form = $form.$elem;
 		}
 	
@@ -127,41 +140,19 @@ class ControllerBase extends Controller
 		return $form;
 	}
 	
-	public function tabla($id, $head, $body, $extras, $total){
+	public function thead($id, $head){
 		$tabla = '<div id="tdiv"><table id="'.$id.'" class="display" cellspacing="0"><thead><tr>';
 		
 		//Dibujar table head
 		foreach ($head as $h){
 			$tabla = $tabla.'<th>'.$h.'</th>';
 		}
-		$tabla = $tabla.'</tr></thead><tbody>';
-		
-		//dibujar table body
-		foreach ($body as $b){
-			$tabla = $tabla.'<tr><td>';
-			echo "<tr>";
-			echo "<td>$f->f_correlativo</td>";
-			echo "<td>";
-			if($f->f_tipoinventario == 1){
-				echo "Activo Fijo";
-			}else echo "Gasto";
-			echo "</td>";
-			echo "<td>".date("Y-m-d",strtotime($f->f_fecha))."</td>";
-			$inv = Inventario::findFirst("i_id = $f->i_id");
-			echo "<td>$inv->i_correlativo</td>";
-			echo "<td>$inv->i_serie</td>";
-			echo "<td>$inv->i_proveedor</td>";
-			echo "<td>";
-			if($f->f_movimiento == 1){
-				echo "Ingreso";
-			}elseif ($f->f_movimiento == 2){
-				echo "Traslado";
-			}else echo "Baja";
-			echo "</td>";
-			echo "<td>$ ".number_format($inv->i_vadquisicion,2)."</td>";
-			echo "<td><a href='formulario/reimprime2?c=$f->f_correlativo&t=$f->f_tipoinventario'>Reimprimir</a></td>";
-			echo "</tr>";
-		}
+		$tabla = $tabla.'</tr></thead><tbody>';			
+		return $tabla;
+	}
+	
+	public function ftable($tabla){
 		$tabla = $tabla.'</tbody></table></div>';
+		return $tabla;
 	}
 }

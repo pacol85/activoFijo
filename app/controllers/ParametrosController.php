@@ -20,18 +20,18 @@ class ParametrosController extends ControllerBase
 		$pConta = Parametros::findFirst("p_id = 4");
 		$pRRHH = Parametros::findFirst("p_id = 5");
 		$campos = [				
-				["h2",["usuarios"], "Usuarios", ""],
-				["sdb", ["admin", $users, ["u_id", "u_nombre"], $pAdmin->p_valor], "Administraci&oacute;n", ""],
-				["sdb", ["conta", $users, ["u_id", "u_nombre"], $pConta->p_valor], "Usuario Contabilidad", ""],
-				["sdb", ["rrhh", $users, ["u_id", "u_nombre"], $pRRHH->p_valor], "Recursos Humanos", ""],
-				["h2",["min"], "M&iacute;nimos para Bienes y Activos", ""],
-				["t", ["mbienes", 100*$mb], "M&iacute;nimo Bienes", "money"],
-				["t", ["mactivos", 100*$ma], "M&iacute;nimo Activos", "money"],
-				["s", [""], "Actualizar", ""]
+				["h2",["usuarios"], "Usuarios"],
+				["sdb", ["admin", $users, ["u_id", "u_nombre"], $pAdmin->p_valor], "Administraci&oacute;n"],
+				["sdb", ["conta", $users, ["u_id", "u_nombre"], $pConta->p_valor], "Usuario Contabilidad"],
+				["sdb", ["rrhh", $users, ["u_id", "u_nombre"], $pRRHH->p_valor], "Recursos Humanos"],
+				["h2",["min"], "M&iacute;nimos para Bienes y Activos"],
+				["m", ["mbienes", 100*$mb], "M&iacute;nimo Bienes"],
+				["m", ["mactivos", 100*$ma], "M&iacute;nimo Activos"],
+				["s", [""], "Actualizar"]
 		];
 		$action = "parametros/actualizar";
 		$this->view->elem = parent::form($campos, $action);
-		$this->view->titulo = parent::elemento("h1", [""], "Par&aacute;metros", "");		
+		$this->view->titulo = parent::elemento("h1", [""], "Par&aacute;metros");		
 	}
 	
 	public function actualizarAction() {

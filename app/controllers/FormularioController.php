@@ -901,7 +901,7 @@ td{
     public function movimientosAction(){
     	if($this->request->isGet()){
     		$r = $this->request->get("r");
-    		if($r = 1){
+    		if($r != 1){
     			$this->session->set("search", "");
     		}else {
 	    		$actual = date("Y-m");
@@ -911,6 +911,44 @@ td{
 		    	$this->session->set("total", $tot["full"]);
 	    	}
     	}
+    	
+    	$titulo = parent::elemento("h1", ["movMes"], "Movimientos del Mes");
+    	$this->view->titulo = $titulo;
+    	
+    	//campos
+    	$anios = Formulario::find();
+    	$list = array();
+    	foreach ($anios as $anio){
+    		$a = date('Y', strtotime($anio->f_fecha));
+    		//$a = date_format($anio->f_fecha, 'Y');
+    		if(!array_key_exists($a, $list)){
+    			$list[$a] = $a;
+    		}
+    	}
+    	krsort($list);
+    	
+    	$meses = array("1" => "Enero", "2" => "Febrero",
+        		"3" => "Marzo", "4" => "Abril", "5" => "Mayo", "6" => "Junio",
+        		"7" => "Julio", "8" => "Agosto", "9" => "Septiembre", "10" => "Octubre",
+        		"11" => "Noviembre", "12" => "Diciembre");
+    	$m = date('m');
+    	
+    	$movMes = $this->session->get("mov");
+    	$mm = "$ ".number_format($movMes,2);
+    	$tot = $this->session->get("total");
+    	$t = "$ ".number_format($tot,2);
+    	
+    	$campos = [
+    			["lf", ["opciones"], "Seleccionar A&ntilde;o y Mes"],
+    			["sel", ["anio", $list], "A&ntilde;o:"],
+    			["sel", ["mes", $meses, $m], "Mes:"],
+    			["s", [], "Cargar"],
+    			["enter", [], ""],
+    			["l", [$mm], "Total por movimientos:"],
+    			["l", [$t], "Total a este mes:"]
+    	];
+    	$form = parent::form($campos, "formulario/listado");
+    	$this->view->form = $form;
     }
     
     public function totales($mes){
