@@ -350,24 +350,7 @@ class FormularioController extends ControllerBase
     	$formulario->f_correlativo = $maxCorr+1;
     	$formulario->save();
     	
-    	
-    	/*
-    	if (!$formulario->save()) {
-    	
-    		foreach ($formulario->getMessages() as $message) {
-    			$this->flash->error($message);
-    		}
-    	
-    		return $this->dispatcher->forward(array(
-    				"controller" => "formulario",
-    				"action" => "edit",
-    				"params" => array($formulario->f_id)
-    		));
-    	}
-    	*/
-    	//$this->flash->success("formulario was updated successfully");
-    	
-    	$this->pdfAction($formulario, $inventario, 1);
+    	$this->pdfAction($formulario, $inventario, 1, false);
     }
     
     public function listUsersAction()
@@ -382,7 +365,7 @@ class FormularioController extends ControllerBase
     
     }
     
-    public function pdfAction($formulario, $inventario, $movimiento)
+    public function pdfAction($formulario, $inventario, $movimiento, $reimpresion)
     {
     	// set the default timezone to use
     	$this->view->disable();
@@ -391,13 +374,18 @@ class FormularioController extends ControllerBase
     	if($formulario->f_tipoinventario == 2){
     		$aob = "BIENES LLEVADOS A GASTO";
     	}
-    	$usuario = Usuarios::findFirst($inventario->u_id);
-    	$dept = Departamento::findFirst($usuario->d_id);
+    	if($reimpresion){
+    		$usuario = Usuarios::findFirst($formulario->f_unuevo);
+    		$dept = Departamento::findFirst($formulario->f_ndept);    		 
+    	}else{
+    		$usuario = Usuarios::findFirst($inventario->u_id);
+    		$dept = Departamento::findFirst($usuario->d_id);    		 
+    	}
     	$usuarioA = Usuarios::findFirst($formulario->f_uanterior);
     	$deptA = Departamento::findFirst($usuarioA->d_id);
-    	
+    	    	
     	//obten usuario que llena el formulario
-    	$usuario2 = Usuarios::findFirst($this->session->get("usuario"));
+    	$elab = Usuarios::findFirst(array("u_id = ".$formulario->f_elaboradopor));
     
     	$html =
     	'<!DOCTYPE html>
@@ -608,7 +596,7 @@ td{
 	<nobr>&nbsp;</nobr>';
 	
 				
-	if($movimiento ==1 || $movimiento == 3){
+	if($movimiento ==1 || $movimiento == 3){		
 		$autorizador = Parametros::findFirst("p_parametro = 'administrador'");
 		$aut = Usuarios::findFirst("u_id = ".$autorizador->p_valor);
 		$pconta = Parametros::findFirst("p_parametro = 'contabilidad'");
@@ -616,7 +604,7 @@ td{
 		$html = $html.'<table border="0" align="center">
 		<tbody>
 			<tr>
-				<td align="left" style="width:25%">Elaborado por:</td><td align="center" style="width:25%">'.$usuario2->u_nombre.'</td>
+				<td align="left" style="width:25%">Elaborado por:</td><td align="center" style="width:25%">'.$elab->u_nombre.'</td>
 				<td align="left" style="width:25%">Autorizado por:</td><td align="center" style="width:25%">'.$aut->u_nombre.'</td>
 			</tr>
 			<tr>
@@ -645,7 +633,7 @@ td{
 	<table border="0" align="center">
 		<tbody>
 			<tr>
-				<td align="left" style="width:25%">Elaborado por:</td><td style="width:25%">'.$usuario2->u_nombre.'</td>
+				<td align="left" style="width:25%">Elaborado por:</td><td style="width:25%">'.$elab->u_nombre.'</td>
 			</tr><tr>
 				<td align="left" style="width:25%">Firma:</td><td style="width:25%">____________________</td>
 			</tr>
@@ -884,7 +872,7 @@ td{
     	 		$this->flash->error("El correlativo ingresado no existe");
     	 	}else{
     	 		$inv = Inventario::findFirst("i_id = $form->i_id");
-    	 		$this->pdfAction($form, $inv, $form->f_movimiento);
+    	 		$this->pdfAction($form, $inv, $form->f_movimiento, true);
     	 	}    	 	
     	 }else{
     	 	$this->flash->error("Debe ingresar un correlativo");
@@ -1057,7 +1045,7 @@ td{
     			$this->flash->error("El correlativo ingresado no existe");
     		}else{
     			$inv = Inventario::findFirst("i_id = $form->i_id");
-    			$this->pdfAction($form, $inv, $form->f_movimiento);    			 
+    			$this->pdfAction($form, $inv, $form->f_movimiento, true);    			 
     		}
     	}else{
     		$this->flash->error("No se encontr&oacte; el formulario");
@@ -1067,6 +1055,120 @@ td{
     		));
     	}
     	 
+    }
+    
+    /**
+     * Ingresa a reporte de movimientos del mes
+     */
+    public function pendientesAction(){
+    	//tabla
+    	$tabla = parent::thead("pend", ["Formulario", "Tipo", "Fecha", "Inventario",
+    			"Serie", "Proveedor", "Movimiento", "Valor Adquisici&oacute;n", "Acciones"]);
+    	
+    	$uid = $this->session->get("usuario");
+    	$pAdmin = Parametros::findFirst("p_id = 3");
+    	$pConta = Parametros::findFirst("p_id = 4");
+    	$flist = array();
+    	$pid = 0;
+    	if ($uid == $pAdmin->p_valor){
+    		$pid = 3;
+    		$flist = Formulario::find(
+    				array("(f_movimiento = 1 or f_movimiento = 3) 
+    						and f_autorizadopor is NULL")
+    				);
+    	}
+    	if ($uid == $pConta->p_valor){
+    		$pid = 4;
+    		$flist = Formulario::find(
+    				array("(f_movimiento = 1 or f_movimiento = 3)
+    						and f_autorizadopor is not NULL and f_personaconta is null")
+    				);
+    	}
+    	$tabla = $this->dibujaTabla($flist, 1, $tabla, $pid);
+    	$flist2 = Formulario::find(
+    				array("f_movimiento = 2
+    						and f_autorizadopor is NULL
+    						and f_uanterior = $uid")
+    				);
+    	$tabla = $this->dibujaTabla($flist2, 2, $tabla, 0);
+    	$flist3 = Formulario::find(
+    			array("f_movimiento = 2
+    					and f_personaconta is NULL
+    					and f_unuevo = $uid")
+    			);
+    	$tabla = $this->dibujaTabla($flist3, 3, $tabla, 0);
+    	
+    	 
+    	$tabla = parent::elemento("enter", [], "").$tabla;
+    	$this->view->titulo = parent::elemento("h1", ["pend"], "Pendientes de Aprobar");
+    	$this->view->tabla = parent::ftable($tabla);
+    }
+    
+    public function dibujaTabla($flist, $accion, $tabla, $pid){
+    	foreach ($flist as $f){
+    		$tabla = $tabla."<tr>";
+    		if($f->f_tipoinventario == 1){
+    			$tp = "Activo Fijo";
+    		}else $tp ="Gasto";
+    		$inv = Inventario::findFirst("i_id = $f->i_id");
+    		if($f->f_movimiento == 1){
+    			$m = "Ingreso";
+    		}elseif ($f->f_movimiento == 2){
+    			$m =  "Traslado";
+    		}else $m = "Baja";
+    	
+    		$tabla = $tabla.parent::td([
+    				$f->f_correlativo,
+    				$tp,
+    				date("Y-m-d",strtotime($f->f_fecha)),
+    				$inv->i_correlativo,
+    				$inv->i_serie,
+    				$inv->i_proveedor,
+    				$m,
+    				number_format($inv->i_vadquisicion,2),
+    				"<a href='formulario/aprobar?pid=".$pid."&fid=".$f->f_id."&a=".$accion."'>Aprobar</a> | <a href='formulario/reimprime2?c=$f->f_correlativo&t=$f->f_tipoinventario'>Pdf</a>"
+    		]);
+    		$tabla = $tabla."</tr>";
+    	}
+    	return $tabla;
+    }
+    
+    public function aprobarAction(){
+    	$acccion = $this->request->get("a");
+    	$fid = $this->request->get("fid");
+    	
+    	$form = Formulario::findFirst("f_id = $fid");
+    	switch ($acccion){
+    		case 1 :
+    			$pid = $this->request->get("pid");
+    			$user = $this->session->get("usuario");
+    			if($pid == 3){
+    				$form->f_autorizadopor = $user;
+    				$form->f_fechaaprobado = parent::fechaHoy(true);
+    			}else{
+    				$form->f_personaconta = $user;
+    				$form->f_fecharevisado = parent::fechaHoy(true);
+    			}
+    			break;
+    		case 2 :
+    			$form->f_autorizadopor = $form->f_uanterior;
+    			$form->f_fechaaprobado = parent::fechaHoy(true);
+    			break;
+    		case 3 :
+    			$form->f_personaconta = $form->f_unuevo;
+    			$form->f_fecharevisado = parent::fechaHoy(true);
+    			break;
+    	}
+    	if($form->save()){
+    		$this->flash->success("Aprobaci&oacute;n exitosa");
+    	}else{
+    		$this->flash->error("Ocurri&oacute; un error durante la aprobaci&oacute;n");
+    	}    	
+    	return $this->dispatcher->forward(array(
+    			"controller" => "formulario",
+    			"action" => "pendientes"
+    	));
+    	
     }
     
 }
