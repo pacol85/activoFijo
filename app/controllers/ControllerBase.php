@@ -59,8 +59,15 @@ class ControllerBase extends Controller
 				$elem = $elem.$this->tag->hiddenField(array("$n[0]", "value" => $l));
 				break;
 			case "s" :
-				$elem = $elem.'<div class="form-group"><div class="col-sm-12" align="center">';
+				$elem = $elem.'<div class="form-group main"><div class="col-sm-12" align="center">';
 				$elem = $elem.$this->tag->submitButton(array("$l", "class" => "btn btn-default"));
+				$elem = $elem.'</div></div>';
+				break;
+			case "bg" :
+				$elem = $elem.'<div class="form-group edit"><div class="col-sm-12" align="center">';
+				foreach ($n as $b){
+					$elem = $elem.'<button class="btn btn-default" id="'.$b[0].'" name="'.$b[0].'" onclick="'.$b[1].'">'.$b[2].'</button> ';
+				}				
 				$elem = $elem.'</div></div>';
 				break;
 			case "h2" :
@@ -88,6 +95,9 @@ class ControllerBase extends Controller
 				//agrega nombre campo
 				switch ($t){
 					case "t" :
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]"));
+						break;
+					case "tv" :
 						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
 					case "m" :
@@ -123,12 +133,13 @@ class ControllerBase extends Controller
 		return $elem;
 	}
 	
-	public  function form($campos, $action){
+	public  function form($campos, $action, $id = "id"){
 		$form = $this->tag->form(
 				array(
 						$action,
 						"autocomplete" => "off",
-						"class" => "form-horizontal"
+						"class" => "form-horizontal",
+						"id" => "$id"
 				)
 				);
 		foreach ($campos as $c){
@@ -163,4 +174,31 @@ class ControllerBase extends Controller
 		$tabla = $tabla.'</tbody></table></div>';
 		return $tabla;
 	}
+	
+	public function jsCargarDatos($campos, $hide, $show){
+		$js = "function cargarDatos(";
+		foreach ($campos as $c){
+			$js = $js.$c.",";
+		}
+		$js = rtrim($js, ",");
+		$js = $js."){";
+		foreach ($campos as $c2){
+			$js = $js."$('#".$c2."').val(".$c2.");";			
+		}
+		
+		foreach ($hide as $h){
+			$js = $js."$('.".$h."').hide();";
+		}
+		
+		foreach ($show as $s){
+			$js = $js."$('.".$s."').show();";
+		}
+		$js = $js."}";
+		return $js;
+	}
+	
+	public function resetForm($campos){
+		$this->tag->resetInput();
+	}
+		
 }

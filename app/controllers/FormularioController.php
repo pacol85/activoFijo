@@ -968,6 +968,7 @@ td{
     				number_format($inv->i_vadquisicion,2),
     				"<a href='formulario/reimprime2?c=$f->f_correlativo&t=$f->f_tipoinventario'>Reimprimir</a>"
     		]);
+    		$tabla = $tabla."</tr>";
     	}
     	
     	$tabla = parent::elemento("enter", [], "").$tabla;
