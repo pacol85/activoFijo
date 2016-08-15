@@ -44,6 +44,11 @@
 				$('.date').mask('0000-00-00');
 				$('.datepicker').pickadate();
 				$('.money').mask("#,##0.00", {reverse: true});
+				$('.email').mask("A", {
+					translation: {
+						"A": { pattern: /[\w@\-.+]/, recursive: true }
+					}
+				});
 			});
 		</script>        
     </head>

@@ -80,6 +80,12 @@ class Usuarios extends \Phalcon\Mvc\Model
      * @var string
      */
     public $r_id;
+    
+    /**
+     *
+     * @var string
+     */
+    public $email;
 
     /**
      * Initialize method for model.

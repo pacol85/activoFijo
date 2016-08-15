@@ -181,4 +181,61 @@ class SubirController extends ControllerBase {
 		return $fechaExcel;
 	}
 	
+	function usuariosAction(){
+		$file = "c:\TEMPFILE\Usuarios.xlsx";
+		$inputFileType = PHPExcel_IOFactory::identify($file);
+		$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+		$archivo = $objReader->load($file);
+		
+		set_time_limit(300);
+		$sheet = $archivo -> setActiveSheetIndex(0);
+		$highestRow = $sheet->getHighestRow();
+		$highestColumn = $sheet->getHighestColumn();
+			
+		$titulo = true;
+		$longitud = 0;
+		$usuario = array();
+		$timezone  = -6; //(GMT -5:00) EST (U.S. & Canada)
+		$fechaHoy = gmdate("Y-m-d H:i:s", time() + 3600*($timezone));
+		$fila = 0;
+		
+		for ($row = 1; $row <= $highestRow; $row++){
+			//  Read a row of data into an array
+			$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+					NULL,
+					TRUE,
+					FALSE);
+				
+			foreach ($rowData as $row2){
+					
+				//Imprime fila de títulos
+				if ($titulo == true){
+					$titulo = false;
+					continue;
+						
+				}
+				else{
+					$user = Usuarios::find("u_lanid = '".$row2[0]."'");
+					if (count($user > 0)){
+						$user[0]->u_eid = $row2[2];
+						$user[0]->email = $row2[3];
+						$user[0]->save();
+					}else{
+						$usuario = new Usuarios();
+						$usuario->u_lanid = $row2[0];
+						$usuario->u_nombre = $row2[1];
+						$usuario->u_eid = $row2[2];
+						$usuario->email = $row2[3];
+						$usuario->u_creacion = parent::fechaHoy(true);
+						$usuario->save();
+					}										
+					
+		
+				}
+					
+			}
+		
+		}
+	}
+	
 }

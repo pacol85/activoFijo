@@ -67,7 +67,7 @@ class ControllerBase extends Controller
 				$elem = $elem.'<div class="form-group edit"><div class="col-sm-12" align="center">';
 				foreach ($n as $b){
 					$elem = $elem.'<button class="btn btn-default" id="'.$b[0].'" name="'.$b[0].'" onclick="'.$b[1].'">'.$b[2].'</button> ';
-				}				
+				}
 				$elem = $elem.'</div></div>';
 				break;
 			case "h2" :
@@ -103,6 +103,9 @@ class ControllerBase extends Controller
 					case "m" :
 						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control money", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
+					case "e" :
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control email", "id" => "$n[0]"));
+						break;								
 					case "p" :
 						$elem = $elem.$this->tag->passwordField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]"));
 						break;
@@ -118,14 +121,14 @@ class ControllerBase extends Controller
 							$elem = $elem.$this->tag->select(array("$n[0]",
 									$n[1],
 									"using" => $n[2], "class" => "form-control", "id" => "$n[0]"));
-						}						
-		    			break;
+						}
+						break;
 					case "sel" :
 						if(count($n) > 2){
 							$elem = $elem.$this->tag->select(array("$n[0]", $n[1], "class" => "form-control", "id" => "$n[0]", "value" => $n[2]));
 						}else{
 							$elem = $elem.$this->tag->select(array("$n[0]", $n[1], "class" => "form-control", "id" => "$n[0]"));
-						}						
+						}
 						break;
 				}
 				$elem = $elem.'</div></div>';
@@ -153,12 +156,12 @@ class ControllerBase extends Controller
 	
 	public function thead($id, $head){
 		$tabla = '<div id="tdiv"><table id="'.$id.'" class="display" cellspacing="0"><thead><tr>';
-		
+	
 		//Dibujar table head
 		foreach ($head as $h){
 			$tabla = $tabla.'<th>'.$h.'</th>';
 		}
-		$tabla = $tabla.'</tr></thead><tbody>';			
+		$tabla = $tabla.'</tr></thead><tbody>';
 		return $tabla;
 	}
 	
@@ -167,7 +170,7 @@ class ControllerBase extends Controller
 		foreach ($col as $c){
 			$td = $td.'<td>'.$c.'</td>';
 		}
-		return $td; 
+		return $td;
 	}
 	
 	public function ftable($tabla){
@@ -175,7 +178,7 @@ class ControllerBase extends Controller
 		return $tabla;
 	}
 	
-	public function jsCargarDatos($campos, $hide, $show){
+	public function jsCargarDatos($campos, $hide = null, $show = null, $otros = null){
 		$js = "function cargarDatos(";
 		foreach ($campos as $c){
 			$js = $js.$c.",";
@@ -183,22 +186,39 @@ class ControllerBase extends Controller
 		$js = rtrim($js, ",");
 		$js = $js."){";
 		foreach ($campos as $c2){
-			$js = $js."$('#".$c2."').val(".$c2.");";			
+			$js = $js."$('#".$c2."').val(".$c2.");";
 		}
-		
-		foreach ($hide as $h){
-			$js = $js."$('.".$h."').hide();";
+	
+		if($hide != null){
+			foreach ($hide as $h){
+				$js = $js."$('.".$h."').hide();";
+			}
 		}
-		
-		foreach ($show as $s){
-			$js = $js."$('.".$s."').show();";
+		if($show != null){
+			foreach ($show as $s){
+				$js = $js."$('.".$s."').show();";
+			}
 		}
+		if($otros != null){
+			foreach ($otros as $o){
+				$js = $js."$('#".$o[0]."').prop(".$o[1].");";
+			}
+		}
+	
 		$js = $js."}";
 		return $js;
 	}
 	
-	public function resetForm($campos){
-		$this->tag->resetInput();
+	/*
+	 * Funcion para el dispatcher Forward
+	 */
+	public function forward($controller, $action){
+		return $this->dispatcher->forward(
+				array(
+						"controller" => $controller,
+						"action"     => $action
+				)
+				);
 	}
 		
 }

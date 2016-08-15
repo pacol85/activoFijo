@@ -23,10 +23,12 @@ class UsuariosController extends ControllerBase
         		["sdb", ["dept", $deptos, ["d_id", "d_nombre"]], "Departamento"],
         		["sel", ["tipo", ["1" => "Empleado", "2" => "Outsource"]], "Tipo empleado"],
         		["sdb", ["rol", $roles, ["r_id", "r_rol"], 5], "Rol"],
+        		["e", ["email"], "e-mail"],
+        		["h", ["uid"], ""], 
         		["s", [""], "Crear Usuario"]
         ];
         $js = parent::jsCargarDatos(
-        		["nombre", "lanid", "codigo", "eid", "dept", "tipo", "rol"], 
+        		["nombre", "lanid", "codigo", "eid", "dept", "tipo", "rol", "email", "uid"], 
         		["main"], ["edit"]);
         $tabla = parent::thead("users", [
         		"LAN ID", "Nombre", "ID empleado", "C&oacute;digo", "Departamento", 
@@ -61,7 +63,7 @@ class UsuariosController extends ControllerBase
         			$t,
         			$e,
         			"<a onClick=\"cargarDatos('".$u->u_nombre."','".$u->u_lanid.
-        			"','$u->u_codigo','$u->u_eid','$u->d_id','$u->u_tipo','$u->r_id');\">Editar</a> |
+        			"','$u->u_codigo','$u->u_eid','$u->d_id','$u->u_tipo','$u->r_id','$u->email','$u->u_id');\">Editar</a> |
         			<a href='usuarios/disable?u=$u->u_id'>$action</a>"        			
         	]);
         	$tabla = $tabla."</tr>";
@@ -96,6 +98,7 @@ class UsuariosController extends ControllerBase
     		$user->u_modificacion = parent::fechaHoy(true);
     		$user->u_nombre = $nombre;
     		$user->u_tipo = $this->request->getPost("tipo");
+    		$user->email = $this->request->getPost("email");
     		
     		if ($user->save()){
     			$this->flash->success("Usuario creado exitosamente");
@@ -103,10 +106,7 @@ class UsuariosController extends ControllerBase
     			$this->flash->error("Ocurri&oacute; un error al guardar el usuario");
     		}
     	}
-    	return $this->dispatcher->forward(array(
-    			"controller" => "usuarios",
-    			"action" => "index"
-    	));
+    	parent::forward("usuarios", "index");
     }
     
     /**
@@ -126,10 +126,42 @@ class UsuariosController extends ControllerBase
     	}else{
     		$this->flash->error("Ocurri&oacute; un error al guardar el usuario");
     	}
-    	return $this->dispatcher->forward(array(
-    			"controller" => "usuarios",
-    			"action" => "index"
-    	));
+    	
+    	parent::forward("usuarios", "index");    	
+    }
+    
+    /**
+     * Guardar edicion
+     */
+    public function editarAction(){
+    	$nombre = $this->request->getPost("nombre");
+    	$lid = $this->request->getPost("lanid");
+    	$uid = $this->request->getPost("uid");
+    	if($uid == ""){
+    		$this->flash->error("Ocurri&oacute; un error al cargar el ID de usuario");
+    		parent::forward("usuarios", "index");
+    	}
+    	if($nombre == "" || $lid == ""){
+    		$this->flash->error("Nombre o LAN ID no pueden ir en blanco");
+    	}else {
+    		$user = Usuarios::findFirst("u_id = $uid");
+    		$user->d_id = $this->request->getPost("dept");
+    		$user->r_id = $this->request->getPost("rol");
+    		$user->u_codigo = $this->request->getPost("codigo");
+    		$user->u_eid = $this->request->getPost("eid");
+    		$user->u_lanid = $lid;
+    		$user->u_modificacion = parent::fechaHoy(true);
+    		$user->u_nombre = $nombre;
+    		$user->u_tipo = $this->request->getPost("tipo");
+    		$user->email = $this->request->getPost("email");
+    	
+    		if ($user->save()){
+    			$this->flash->success("Usuario editado exitosamente");
+    		}else{
+    			$this->flash->error("Ocurri&oacute; un error al guardar el usuario");
+    		}
+    	}
+    	parent::forward("usuarios", "index");
     }
     
     
