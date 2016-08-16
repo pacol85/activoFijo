@@ -24,14 +24,12 @@ class UbicacionController extends ControllerBase
     	$tabla = parent::thead("ubicacion", ["Nombre", "Descripci&oacute;n", "Acciones"]);
     	$ubic = Ubicacion::find();
     	foreach ($ubic as $u){
-    		$tabla = $tabla."<tr>";
-    		$tabla = $tabla.parent::td([
+    		$tabla = $tabla.parent::tbody([
     				$u->ub_nombre,
     				$u->ub_descripcion,
     				"<a onClick=\"cargarDatos('".$u->ub_nombre."','".$u->ub_descripcion.
     				"','$u->ub_id');\">Editar</a>"
-    		]);
-    		$tabla = $tabla."</tr>";
+    		]);    		
     	}
     	
     	$this->view->js = $js;

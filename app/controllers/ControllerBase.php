@@ -164,6 +164,13 @@ class ControllerBase extends Controller
 		$tabla = $tabla.'</tr></thead><tbody>';
 		return $tabla;
 	}
+
+	public function tbody($col){
+		$tr = "<tr>";
+		$tr = $tr.$this->td($col);
+		$tr = $tr."</tr>";
+		return $tr;
+	}
 	
 	public function td($col){
 		$td = "";
