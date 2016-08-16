@@ -116,6 +116,18 @@ class Formulario extends \Phalcon\Mvc\Model
      * @var string
      */
     public $f_fechaaprobado;
+    
+    /**
+     *
+     * @var integer
+     */
+    public $ubicanterior;
+    
+    /**
+     *
+     * @var integer
+     */
+    public $ubicnueva;
 
     /**
      * Returns table name mapped in the model.

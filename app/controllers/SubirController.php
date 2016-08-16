@@ -216,10 +216,12 @@ class SubirController extends ControllerBase {
 				}
 				else{
 					$user = Usuarios::find("u_lanid = '".$row2[0]."'");
-					if (count($user > 0)){
-						$user[0]->u_eid = $row2[2];
-						$user[0]->email = $row2[3];
-						$user[0]->save();
+					if (count($user) > 0){
+						foreach ($user as $u){
+							$u->u_eid = $row2[2];
+							$u->email = $row2[3];
+							$u->save();
+						}						
 					}else{
 						$usuario = new Usuarios();
 						$usuario->u_lanid = $row2[0];
