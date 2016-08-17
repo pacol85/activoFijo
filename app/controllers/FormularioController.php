@@ -685,13 +685,40 @@ td{
      */
     public function trasladoAction()
     {
-    	$this->view->fecha = parent::fechaHoy(false);
+    	//$this->view->fecha = parent::fechaHoy(false);
+    	$dept = Departamento::find();
+    	$d = $dept->getFirst();
+    	$user = Usuarios::find("u_estado = 1 AND d_id = ".$d->d_id);
+    	$campos = [
+    			["l", [parent::fechaHoy(false)], "Fecha"],
+    			["h2", [""], "Descripci&oacute;n del Activo o Bien"],
+    			["t", ["inventario"], "No. Inventario"],
+    			["t", ["tipo"], "Tipo"],
+    			["t", ["desc"], "Descripci&oacute;n"],
+    			["t", ["marca"], "Marca"],
+    			["t", ["modelo"], "Modelo"],
+    			["t", ["color"], "Color"],
+    			["t", ["serie"], "Serie"],
+    			["t", ["otros"], "Otros"],
+    			["h2", [""], "Datos Traslado"],
+    			["t", ["da"], "Dept. Anterior", 1],
+    			["t", ["ua"], "Usuario Anterior", 1],
+    			["r", ["asignar", ["Usuario", "Departamento"]], "Asignar"],
+    			["sdb", ["dept", $dept, ["d_id", "d_nombre"]], "Dept. que Recibe"],
+    			["sdb", ["user", $user, ["u_id", "u_nombre"]], "Usuario que Recibe", "udiv"],
+    			["d", ["fechaT"], "Fecha traslado"],
+    			["s", [""], "Trasladar"]    			
+    	];
+    	
+    	
+    	$this->view->titulo = parent::elemento("h1", ["titulo"], "Formulario para Traslado de Activo o Bien llevado a Gasto");
+    	$this->view->form = parent::form($campos, "formulario/trasladar", "form1");
     }
     
     public function loadItemAction()
     {
     	$i = $this->request->getPost("inventario");
-    	$inv = Inventario::findFirst(array("i_correlativo = '$i' and i_estado = 1"));
+    	$inv = Inventario::findFirst(array("i_correlativo like '%$i%' and i_estado = 1"));
     	
     	//obtener usuario y depto
     	$user = Usuarios::findFirst("u_id = ".$inv->u_id);
