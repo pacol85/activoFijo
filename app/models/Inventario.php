@@ -152,7 +152,19 @@ class Inventario extends \Phalcon\Mvc\Model
      * @var integer
      */
     public $ubicid;
+    
+    /**
+     *
+     * @var integer
+     */
+    public $depto;
 
+    /**
+     *
+     * @var integer
+     */
+    public $adepto;
+    
     /**
      * Initialize method for model.
      */

@@ -356,16 +356,24 @@ class FormularioController extends ControllerBase
     public function listUsersAction()
     {
     	$dept = $this->request->getPost("dept");
-    	$select = $this->tag->select(array("user",
-    			Usuarios::find("u_estado = 1 AND d_id = $dept"),
-    			"using" => array("u_id", "u_nombre"), "class" => "form-control", "id" => "fieldUser"));
-       	
+    	$dis = $this->request->getPost("disable");
+    	$disable = "";
+    	$select = "";
+    	if($dis == 1){
+    		$select = $this->tag->select(array("user",
+    				Usuarios::find("u_estado = 1 AND d_id = $dept"),
+    				"using" => array("u_id", "u_nombre"), "class" => "form-control", "id" => "user", "disabled" => ""));
+    	}else{
+    		$select = $this->tag->select(array("user",
+    				Usuarios::find("u_estado = 1 AND d_id = $dept"),
+    				"using" => array("u_id", "u_nombre"), "class" => "form-control", "id" => "user"));
+    	}       	
     	$response = ['select' => $select, 'dept' => $dept];
        	return parent::sendJson($response);
     
     }
     
-    public function pdfAction($formulario, $inventario, $movimiento, $reimpresion)
+    public function pdfAction($formulario, $inventario, $movimiento, $reimpresion = false)
     {
     	// set the default timezone to use
     	$this->view->disable();
@@ -378,11 +386,25 @@ class FormularioController extends ControllerBase
     		$usuario = Usuarios::findFirst($formulario->f_unuevo);
     		$dept = Departamento::findFirst($formulario->f_ndept);    		 
     	}else{
-    		$usuario = Usuarios::findFirst($inventario->u_id);
-    		$dept = Departamento::findFirst($usuario->d_id);    		 
+    		$usuario = new Usuarios();
+    		$ubic = new Ubicacion();
+    		if($inventario->u_id != null && $inventario->u_id != ""){
+    			$usuario = Usuarios::findFirst($inventario->u_id);    			
+    		}else{
+    			$ubic = Ubicacion::findFirst($formulario->ubicnueva);
+    			
+    		}
+    		$dept = Departamento::findFirst($formulario->f_ndept);
+    		    		 
     	}
-    	$usuarioA = Usuarios::findFirst($formulario->f_uanterior);
-    	$deptA = Departamento::findFirst($usuarioA->d_id);
+    	$usuarioA = new Usuarios();
+    	$ubicA = new Ubicacion();
+    	if($formulario->f_uanterior != null && $formulario->f_uanterior != ""){
+    		$usuarioA = Usuarios::findFirst($formulario->f_uanterior);
+    	}else{
+    		$ubicA = Ubicacion::findFirst($formulario->ubicanterior);
+    	}
+    	$deptA = Departamento::findFirst($formulario->f_adept);
     	    	
     	//obten usuario que llena el formulario
     	$elab = Usuarios::findFirst(array("u_id = ".$formulario->f_elaboradopor));
@@ -540,10 +562,16 @@ td{
 				<td align="left">Usuario Anterior:</td><td align="center">'.$usuarioA->u_nombre.'</td>
 			</tr>
 			<tr>
+				<td align="left">Ubicaci&oacute;n Anterior:</td><td align="center">'.$ubicA->ub_nombre.'</td>
+			</tr>
+			<tr>
 				<td align="left">Dept. que Recibe:</td><td align="center">'.$dept->d_nombre.'</td>
 			</tr>
 			<tr>
 				<td align="left">Usuario que Recibe:</td><td align="center">'.$usuario->u_nombre.'</td>
+			</tr>
+			<tr>
+				<td align="left">Nueva Ubicaci&oacute;n:</td><td align="center">'.$ubic->ub_nombre.'</td>
 			</tr>
 			<tr>
 				<td align="left">Fecha de Traslado:</td><td align="center">'.$formulario->f_fechacompra.'</td>
@@ -629,6 +657,18 @@ td{
 </body>
 </html>';
 	}else{
+		$uod = 'Usuario';
+		$nuod = 'Usuario';
+		if($usuarioA->u_id == null || $usuarioA->u_id == ""){
+			$uod = "Departamento";
+			$amanager = Usuarios::findFirst($deptA->u_id);
+			$usuarioA->u_nombre = $amanager->u_nombre;
+		}
+		if($usuario->u_id == null || $usuario->u_id == ""){
+			$nuod = "Departamento";
+			$nmanager = Usuarios::findFirst($dept->u_id);
+			$usuario->u_nombre = $nmanager->u_nombre;
+		}
 		$html = $html.'
 	<table border="0" align="center">
 		<tbody>
@@ -643,8 +683,8 @@ td{
 	<table border="0" align="center">
 		<tbody>
 			<tr>
-				<td align="left" style="width:25%">Usuario anterior:</td><td align="center" style="width:25%">'.$usuarioA->u_nombre.'</td>
-				<td align="left" style="width:25%">Usuario que recibe:</td><td align="center" style="width:25%">'.$usuario->u_nombre.'</td>
+				<td align="left" style="width:25%">'.$uod.' anterior:</td><td align="center" style="width:25%">'.$usuarioA->u_nombre.'</td>
+				<td align="left" style="width:25%">'.$nuod.' que recibe:</td><td align="center" style="width:25%">'.$usuario->u_nombre.'</td>
 			</tr>
 			<tr>
 				<td align="left" style="width:25%">Fecha:</td><td align="center" style="width:25%"></td>
@@ -689,6 +729,8 @@ td{
     	$dept = Departamento::find();
     	$d = $dept->getFirst();
     	$user = Usuarios::find("u_estado = 1 AND d_id = ".$d->d_id);
+    	$ubic = Ubicacion::find();
+    	
     	$campos = [
     			["l", [parent::fechaHoy(false)], "Fecha"],
     			["h2", [""], "Descripci&oacute;n del Activo o Bien"],
@@ -703,9 +745,11 @@ td{
     			["h2", [""], "Datos Traslado"],
     			["t", ["da"], "Dept. Anterior", 1],
     			["t", ["ua"], "Usuario Anterior", 1],
+    			["t", ["aubic"], "Ubicaci&oacute;n Actual", 1],
     			["r", ["asignar", ["Usuario", "Departamento"]], "Asignar"],
     			["sdb", ["dept", $dept, ["d_id", "d_nombre"]], "Dept. que Recibe"],
     			["sdb", ["user", $user, ["u_id", "u_nombre"]], "Usuario que Recibe", "udiv"],
+    			["sdb", ["ubic", $ubic, ["ub_id", "ub_nombre"]], "Nueva Ubicaci&oacute;n"],
     			["d", ["fechaT"], "Fecha traslado"],
     			["s", [""], "Trasladar"]    			
     	];
@@ -720,23 +764,28 @@ td{
     	$i = $this->request->getPost("inventario");
     	$inv = Inventario::findFirst(array("i_correlativo like '%$i%' and i_estado = 1"));
     	
+    	$user = new Usuarios();
+    	$ubic = new Ubicacion();
     	//obtener usuario y depto
-    	$user = Usuarios::findFirst("u_id = ".$inv->u_id);
-    	$dept = Departamento::findFirst("d_id = ".$user->d_id);
+    	if($inv->u_id != "" || $inv->u_id != null){
+    		$user = Usuarios::findFirst("u_id = ".$inv->u_id);
+    		$dept = Departamento::findFirst("d_id = ".$user->d_id);
+    	}else{
+    		//obtener ubicacion
+    		$dept = Departamento::findFirst("d_id = ".$inv->depto);
+    		$ubic = Ubicacion::findFirst("ub_id = ".$inv->ubicid);
+    	}
     	
     	$response = ['a' => $inv->i_tipo, 'b' => $inv->i_descripcion, 'c' => $inv->i_marca,
     			'd' => $inv->i_modelo, 'e' => $inv->i_color, 'f' => $inv->i_serie, 'g' => $inv->i_otros,
-    			'u' => $user->u_nombre, 'de' => $dept->d_nombre
+    			'u' => $user->u_nombre, 'da' => $dept->d_nombre, 'aubic' => $ubic->ub_nombre
     	];
     	return parent::sendJson($response);    
     }
     
     public function trasladarAction() {
     	if (!$this->request->isPost()) {
-    		return $this->dispatcher->forward(array(
-    				"controller" => "formulario",
-    				"action" => "traslado"
-    		));
+    		parent::forward("formulario", "traslado");
     	}
     	    	 
     	$fh = parent::fechaHoy(true);
@@ -752,22 +801,25 @@ td{
     	$inventario->i_serie = $this->request->getPost("serie");
     	$inventario->i_tipo = $this->request->getPost("tipo");
     	$inventario->i_uanterior = $inventario->u_id;
-    	 
+    	$inventario->adepto = $inventario->depto;
+    	$inventario->depto = $this->request->getPost("dept");
+    	
+    	$uid = $this->request->getPost("user");
+    	
     	$formulario = new Formulario();
     	$formulario->i_id = $inventario->i_id;
     	$formulario->f_fecha = $fh;
     	$formulario->f_movimiento = 2;
     	$formulario->f_uanterior = $inventario->u_id;
-    	//obten dept anterior
-    	$user = Usuarios::findFirst($inventario->u_id);
-    	$dept = Departamento::findFirst($user->d_id);
-    	$formulario->f_adept = $dept->d_id;    	
+    	$formulario->f_adept = $inventario->adepto;
     	$formulario->f_ndept = $this->request->getPost("dept");
     	$formulario->f_unuevo = $this->request->getPost("user");
     	$formulario->f_fechamov = $fh;
     	$formulario->f_fechacompra = $this->request->getPost("fechaT");
     	$formulario->f_elaboradopor = $this->session->get("usuario");
     	$formulario->f_tipoinventario = $inventario->i_activo;
+    	$formulario->ubicanterior = $inventario->ubicid;
+    	$formulario->ubicnueva = $this->request->getPost("ubic");
     	$fti = $formulario->f_tipoinventario;
     	 
     	//obtener el ultimo correlativo:
@@ -778,27 +830,17 @@ td{
     			)
     			);
     	$formulario->f_correlativo = $maxCorr+1;
-    	$formulario->save();
+    	if(!$formulario->save()){
+    		$this->flash->error("Ocurri&oacute; un error al salvar el formulario");
+    		parent::forward("formulario", "traslado");
+    	}
     	
     	$inventario->u_id = $this->request->getPost("user");
-    	$inventario->save();
-    	 
-    	 
-    	/*
-    	 if (!$formulario->save()) {
-    	  
-    	 foreach ($formulario->getMessages() as $message) {
-    	 $this->flash->error($message);
-    	 }
-    	  
-    	 return $this->dispatcher->forward(array(
-    	 "controller" => "formulario",
-    	 "action" => "edit",
-    	 "params" => array($formulario->f_id)
-    	 ));
-    	 }
-    	 */
-    	//$this->flash->success("formulario was updated successfully");
+    	$inventario->ubicid = $this->request->getPost("ubic");    	 
+    	if(!$inventario->save()){
+    		$this->flash->error("Ocurri&oacute; un error al salvar el inventario");
+    		parent::forward("formulario", "traslado");
+    	}
     	 
     	$this->pdfAction($formulario, $inventario, 2);
     }

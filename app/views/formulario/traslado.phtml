@@ -1,15 +1,25 @@
 <script type="text/javascript">
 $(document).ready(function() {
+	$(function() {
+	    var $radios = $('input:radio[name=asignar]');
+	    $radios.filter('[value=Usuario]').prop('checked', true);
+	    $('#ubic').prop('disabled', true);
+	});
+	
 	$('#dept').change(function() {
-		//alert("ingreso paso 2");
+		var dis = 0;
+		var $radios = $('input:radio[value=Departamento]');
+		if($radios.is(':checked') === true) {
+			dis = 1;
+		}
 		$.ajax({
 			type: "POST",
 			url: "formulario/listUsers", 
-			data: {dept: $('#dept').val()},
+			data: {dept: $('#dept').val(), disable: dis},
 			dataType: "json",
 			success: function(result){
 				var jsondata = jQuery.parseJSON(JSON.stringify(result)); 
-				$("#udiv").html(jsondata.select);
+				$("#udiv").html(jsondata.select);				
 			}});
 	});
 
@@ -29,7 +39,8 @@ $(document).ready(function() {
 					$("#color").val(jsondata.e);
 					$("#serie").val(jsondata.f);
 					$("#otros").val(jsondata.g);
-					$("#da").val(jsondata.de);
+					$("#aubic").val(jsondata.aubic);
+					$("#da").val(jsondata.da);
 					$("#ua").val(jsondata.u);
 				}				
 			});
@@ -37,10 +48,12 @@ $(document).ready(function() {
 	});
 
 	$('#Usuario').click(function() {		
-		$('#user').prop('disabled', false);			
+		$('#user').prop('disabled', false);	
+		$('#ubic').prop('disabled', true);				
 	});
 	$('#Departamento').click(function() {		
-		$('#user').prop('disabled', true);			
+		$('#user').prop('disabled', true);
+		$('#ubic').prop('disabled', false);			
 	});		
 });
 
