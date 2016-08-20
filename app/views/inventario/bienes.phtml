@@ -62,11 +62,18 @@
 		echo "<tr>";
 		echo "<td>$bien->i_correlativo</td>";
 		echo "<td>$bien->i_descripcion</td>";
-		echo "<td>$bien->i_ubicacion</td>";
-		$users = Usuarios::find("u_id = $bien->u_id");
-		foreach ($users as $user){
-			echo "<td>$user->u_nombre</td>";
-		}		
+		$ubicacion = "";
+		if($bien->ubicid != null && $bien->ubicid != ""){
+			$ubic = Ubicacion::findFirst("ub_id = $bien->ubicid");
+			$ubicacion = $ubic->ub_nombre;
+		}
+		echo "<td>$ubicacion</td>";
+		$usuario = "";
+		if($bien->u_id != null && $bien->u_id != ""){
+			$user = Usuarios::findFirst("u_id = $bien->u_id");
+			$usuario = $user->u_lanid;
+		}
+		echo "<td>$usuario</td>";
 		echo "<td>$bien->i_observaciones</td>";
 		echo "<td>$bien->i_fingreso</td>";
 		echo "<td>$ ".number_format($bien->i_vadquisicion,2)."</td>";		

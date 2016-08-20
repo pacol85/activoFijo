@@ -39,7 +39,7 @@ function div_hide(){
 	<th>Modelo</th>
 	<th>Proveedor</th>
 	<th>Descripci&oacute;n</th>	
-	<th>Usuario</th>
+	<th>Usuario/Departamento</th>
 	<th>Fecha Ingreso</th>
 	<th>Valor Adquisici&oacute;n</th>				
 </tr></thead>
@@ -54,10 +54,15 @@ function div_hide(){
 		echo "<td>$inv->i_modelo</td>";
 		echo "<td>$inv->i_proveedor</td>";
 		echo "<td>$inv->i_descripcion</td>";
-		$users = Usuarios::find("u_id = $inv->u_id");
-		foreach ($users as $user){
-			echo "<td>$user->u_nombre</td>";
-		}		
+		$u = "";
+		if($inv->ubicid != null && $inv->ubicid != ""){
+			$ubic = Ubicacion::findFirst("ub_id = $inv->ubicid");
+			$u = $ubic->ub_nombre;
+		}else{		
+			$user = Usuarios::findFirst("u_id = $inv->u_id");
+			$u = $user->u_lanid;
+		}
+		echo "<td>$u</td>";				
 		echo "<td>$inv->i_fingreso</td>";
 		echo "<td>$ ".number_format($inv->i_vadquisicion,2)."</td>";
 		echo "</tr>";
