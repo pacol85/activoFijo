@@ -382,27 +382,32 @@ class FormularioController extends ControllerBase
     	if($formulario->f_tipoinventario == 2){
     		$aob = "BIENES LLEVADOS A GASTO";
     	}
-    	if($reimpresion){
+    	$nusuario = "";
+    	$nubic = "";
+    	/*if($reimpresion){
     		$usuario = Usuarios::findFirst($formulario->f_unuevo);
+    		$nusuario = $usuario->u_nombre;
     		$dept = Departamento::findFirst($formulario->f_ndept);    		 
-    	}else{
-    		$usuario = new Usuarios();
-    		$ubic = new Ubicacion();
+    	}else{*/
     		if($inventario->u_id != null && $inventario->u_id != ""){
-    			$usuario = Usuarios::findFirst($inventario->u_id);    			
+    			$usuario = Usuarios::findFirst($inventario->u_id);
+    			$nusuario = $usuario->u_nombre;
     		}else{
     			$ubic = Ubicacion::findFirst($formulario->ubicnueva);
-    			
+    			$nubic = $ubic->ub_nombre;
     		}
     		$dept = Departamento::findFirst($formulario->f_ndept);
     		    		 
-    	}
-    	$usuarioA = new Usuarios();
-    	$ubicA = new Ubicacion();
+    	//}
+    	$ousuario = "";
+    	$oubic = "";
+    	
     	if($formulario->f_uanterior != null && $formulario->f_uanterior != ""){
     		$usuarioA = Usuarios::findFirst($formulario->f_uanterior);
+    		$ousuario = $usuarioA->u_nombre;
     	}else{
     		$ubicA = Ubicacion::findFirst($formulario->ubicanterior);
+    		$oubic = $ubicA->ub_nombre;
     	}
     	$deptA = Departamento::findFirst($formulario->f_adept);
     	    	
@@ -559,19 +564,19 @@ td{
 				<td align="left">Dept. Anterior:</td><td align="center">'.$deptA->d_nombre.'</td>
 			</tr>
 			<tr>
-				<td align="left">Usuario Anterior:</td><td align="center">'.$usuarioA->u_nombre.'</td>
+				<td align="left">Usuario Anterior:</td><td align="center">'.$ousuario.'</td>
 			</tr>
 			<tr>
-				<td align="left">Ubicaci&oacute;n Anterior:</td><td align="center">'.$ubicA->ub_nombre.'</td>
+				<td align="left">Ubicaci&oacute;n Anterior:</td><td align="center">'.$oubic.'</td>
 			</tr>
 			<tr>
 				<td align="left">Dept. que Recibe:</td><td align="center">'.$dept->d_nombre.'</td>
 			</tr>
 			<tr>
-				<td align="left">Usuario que Recibe:</td><td align="center">'.$usuario->u_nombre.'</td>
+				<td align="left">Usuario que Recibe:</td><td align="center">'.$nusuario.'</td>
 			</tr>
 			<tr>
-				<td align="left">Nueva Ubicaci&oacute;n:</td><td align="center">'.$ubic->ub_nombre.'</td>
+				<td align="left">Nueva Ubicaci&oacute;n:</td><td align="center">'.$nubic.'</td>
 			</tr>
 			<tr>
 				<td align="left">Fecha de Traslado:</td><td align="center">'.$formulario->f_fechacompra.'</td>
