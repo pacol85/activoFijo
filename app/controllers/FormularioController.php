@@ -384,6 +384,8 @@ class FormularioController extends ControllerBase
     	}
     	$nusuario = "";
     	$nubic = "";
+    	$usuario = new Usuarios();
+    	$usuarioA = new Usuarios();
     	/*if($reimpresion){
     		$usuario = Usuarios::findFirst($formulario->f_unuevo);
     		$nusuario = $usuario->u_nombre;
@@ -1160,19 +1162,22 @@ td{
     				);
     	}
     	$tabla = $this->dibujaTabla($flist, 1, $tabla, $pid);
-    	$flist2 = Formulario::find(
+    	$manager = Departamento::find("u_id = $uid");
+    	foreach ($manager as $m){
+    		$flist2 = Formulario::find(
     				array("f_movimiento = 2
     						and f_autorizadopor is NULL
-    						and f_uanterior = $uid")
-    				);
-    	$tabla = $this->dibujaTabla($flist2, 2, $tabla, 0);
-    	$flist3 = Formulario::find(
-    			array("f_movimiento = 2
-    					and f_personaconta is NULL
-    					and f_unuevo = $uid")
-    			);
-    	$tabla = $this->dibujaTabla($flist3, 3, $tabla, 0);
-    	
+    						and (f_uanterior = $uid or f_adept = ".$m->d_id.")"
+    				));
+    		$tabla = $this->dibujaTabla($flist2, 2, $tabla, 0);
+    		
+    		$flist3 = Formulario::find(
+    				array("f_movimiento = 2
+    						and f_personaconta is NULL
+    						and (f_unuevo = $uid or f_ndept = ".$m->d_id.")"
+    				));
+    		$tabla = $this->dibujaTabla($flist3, 3, $tabla, 0);
+    	}    	
     	 
     	$tabla = parent::elemento("enter", [], "").$tabla;
     	$this->view->titulo = parent::elemento("h1", ["pend"], "Pendientes de Aprobar");
