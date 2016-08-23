@@ -122,7 +122,7 @@ class ControllerBase extends Controller
 						$elem = $elem.$this->tag->passwordField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]"));
 						break;
 					case "d" :
-						$elem = $elem.$this->tag->dateField(array("$n[0]", "min" => "0", "size" => 30, "class" => "form-control date datepicker", "id" => "$n[0]"));
+						$elem = $elem.$this->tag->dateField(array("$n[0]", "min" => "0", "size" => 30, "class" => "form-control date datepicker", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
 					case "sdb" :
 						if(count($n) > 3){

@@ -269,7 +269,37 @@ class FormularioController extends ControllerBase
      */
     public function ingresoAction()
     {
-    	$this->view->fecha = parent::fechaHoy(false);
+    	//$this->view->fecha = parent::fechaHoy(false);
+    	$dept = Departamento::find();
+    	$d = $dept->getFirst();
+    	$user = Usuarios::find("u_estado = 1 AND d_id = ".$d->d_id);
+    	$ubic = Ubicacion::find();
+    	 
+    	$campos = [
+    			["l", [parent::fechaHoy(false)], "Fecha"],
+    			["h2", [""], "Descripci&oacute;n del Activo o Bien"],
+    			["t", ["tipo"], "Tipo"],
+    			["t", ["desc"], "Descripci&oacute;n"],
+    			["t", ["marca"], "Marca"],
+    			["t", ["modelo"], "Modelo"],
+    			["t", ["color"], "Color"],
+    			["t", ["serie"], "Serie"],
+    			["t", ["otros"], "Otros"],
+    			["h2", [""], "Datos Ingreso"],
+    			["t", ["proveedor"], "Proveedor"],
+    			["m", ["valor", 0], "Valor"],
+    			["r", ["asignar", ["Usuario", "Departamento"]], "Asignar"],
+    			["sdb", ["dept", $dept, ["d_id", "d_nombre"]], "Dept. que Recibe"],
+    			["sdb", ["user", $user, ["u_id", "u_nombre"]], "Usuario que Recibe", "udiv"],
+    			["sdb", ["ubic", $ubic, ["ub_id", "ub_nombre"]], "Nueva Ubicaci&oacute;n"],
+    			["t", ["doc"], "Documento No."],
+    			["d", ["fechaC", parent::fechaHoy(false)], "Fecha compra"],
+    			["s", [""], "Ingresar"]
+    	];
+    	 
+    	 
+    	$this->view->titulo = parent::elemento("h1", ["titulo"], "Formulario para Nuevo Activo o Bien llevado a Gasto");
+    	$this->view->form = parent::form($campos, "formulario/guardarNuevo", "form1");
     }
     
     public function guardarNuevoAction() {
@@ -757,7 +787,7 @@ td{
     			["sdb", ["dept", $dept, ["d_id", "d_nombre"]], "Dept. que Recibe"],
     			["sdb", ["user", $user, ["u_id", "u_nombre"]], "Usuario que Recibe", "udiv"],
     			["sdb", ["ubic", $ubic, ["ub_id", "ub_nombre"]], "Nueva Ubicaci&oacute;n"],
-    			["d", ["fechaT"], "Fecha traslado"],
+    			["d", ["fechaT", parent::fechaHoy(false)], "Fecha traslado"],
     			["s", [""], "Trasladar"]    			
     	];
     	
