@@ -15,7 +15,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: "POST",
 			url: "formulario/listUsers", 
-			data: {dept: $('#dept').val(), dissable: dis},
+			data: {dept: $('#dept').val(), disable: dis},
 			dataType: "json",
 			success: function(result){
 				var jsondata = jQuery.parseJSON(JSON.stringify(result)); 

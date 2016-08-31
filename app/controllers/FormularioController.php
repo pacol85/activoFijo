@@ -336,6 +336,7 @@ class FormularioController extends ControllerBase
     	$inventario->i_tipo = $this->request->getPost("tipo");
     	$inventario->i_vadquisicion = $this->request->getPost("valor");
     	$inventario->u_id = $this->request->getPost("user");
+    	$inventario->ubicid = $this->request->getPost("ubic");
     	$inventario->i_estado = 1;
     	$inventario->i_proveedor = $this->request->getPost("proveedor");
     	
@@ -365,6 +366,7 @@ class FormularioController extends ControllerBase
     	$formulario->f_fechacompra = $this->request->getPost("fechaC");    	    	
     	$formulario->f_ndept = $this->request->getPost("dept");
     	$formulario->f_unuevo = $this->request->getPost("user");
+    	$formulario->ubicnueva = parent::gPost("ubic");
     	$formulario->f_fechamov = $fh;
     	$formulario->f_elaboradopor = $this->session->get("usuario");
     	$formulario->f_tipoinventario = $inventario->i_activo;
@@ -830,7 +832,7 @@ td{
     	//Actualiza el articulo en el inventario
     	$i = $this->request->getPost("inventario");
     	$inventario = Inventario::findFirst(array("i_correlativo = '$i'"));
-    	$inventario->i_color = $this->request->getPost("color");
+    	$inventario->i_color = $this->request->getPost("color");	
     	$inventario->i_descripcion = $this->request->getPost("desc");
     	$inventario->i_marca = $this->request->getPost("marca");
     	$inventario->i_modelo = $this->request->getPost("modelo");
@@ -887,7 +889,26 @@ td{
      */
     public function bajaAction()
     {
-    	$this->view->fecha = parent::fechaHoy(false);
+    	$campos = [
+    			["l", [parent::fechaHoy(false)], "Fecha"],
+    			["h2", [""], "Descripci&oacute;n del Activo o Bien"],
+    			["t", ["inventario"], "No. Inventario"],
+    			["t", ["tipo"], "Tipo"],
+    			["t", ["desc"], "Descripci&oacute;n"],
+    			["t", ["marca"], "Marca"],
+    			["t", ["modelo"], "Modelo"],
+    			["t", ["color"], "Color"],
+    			["t", ["serie"], "Serie"],
+    			["t", ["otros"], "Otros"],
+    			["h2", [""], "Datos Baja"],
+    			["t", ["motivo"], "Motivo de Baja"],
+    			["d", ["fechaB", parent::fechaHoy(false)], "Fecha de Baja"],
+    			["t", ["accion"], "Acci&oacute;n a tomar"],
+    			["s", [""], "Bajar"]    			
+    	];
+    	
+    	$this->view->titulo = parent::elemento("h1", ["titulo"], "Formulario para Baja de Activo o Bien llevado a Gasto");
+    	$this->view->form = parent::form($campos, "formulario/bajar", "form1");
     }
     
 

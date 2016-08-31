@@ -175,6 +175,30 @@ class ControllerBase extends Controller
 		return $form;
 	}
 	
+	/*
+	 * 'enctype' => 'multipart/form-data'
+	 */
+	public function multiForm($campos, $action, $id = "id"){
+		$form = $this->tag->form(
+				array(
+						$action,
+						"autocomplete" => "off",
+						"class" => "form-horizontal",
+						'enctype' => 'multipart/form-data',
+						"id" => "$id"
+				)
+				);
+		foreach ($campos as $c){
+			if(count($c) > 3){
+				$elem = ControllerBase::elemento($c[0], $c[1], $c[2], $c[3]);
+			}else $elem = ControllerBase::elemento($c[0], $c[1], $c[2]);
+			$form = $form.$elem;
+		}
+	
+		$form = $form.$this->tag->endForm();
+		return $form;
+	}
+	
 	public function thead($id, $head){
 		$tabla = '<div id="tdiv"><table id="'.$id.'" class="display" cellspacing="0"><thead><tr>';
 	
@@ -248,5 +272,109 @@ class ControllerBase extends Controller
 				)
 				);
 	}
-		
+	
+	/*
+	 * Función para creación de Links
+	 */
+	public function a($tipo, $accion, $label, $data = []){
+		$a = "<a ";
+		if ($tipo == 1){
+			$a = $a."href='".$accion;
+			if(count($data) > 0){
+				$a = $a."?";
+				foreach ($data as $d){
+					$a = $a.$d[0]."=".$d[1]."&";
+				}
+				$a = rtrim($a, "&");
+			}
+			$a = $a."'>".$label;
+		}else{
+			$a = $a."onClick=\"".$accion."\">".$label;
+		}
+		$a = $a."</a>";
+		return $a;
+	}
+	
+	/*
+	 * obtener var de post
+	 */
+	public function gPost($var){
+		$v = $this->request->getPost($var);
+		return $v;
+	}
+	
+	/*
+	 * Validar post
+	 */
+	public function vPost($var){
+		$p = $this->gPost($var);
+		if($p != null && $p != ""){
+			return true;
+		}
+		return false;
+	}
+	
+	/*
+	 * mensajes
+	 */
+	public function msg($mensaje, $tipo = "e"){
+		switch ($tipo) {
+			case "s":
+				return $this->flash->success($mensaje);
+				break;
+			case "n":
+				return $this->flash->notice($mensaje);
+				break;
+			case "w":
+				return $this->flash->warning($mensaje);
+				break;
+			case "db":
+				return $this->flash->error("Ocurri&oacute; un error durante la operaci&oacute;n");
+				break;
+			default:
+				return $this->flash->error($mensaje);
+				break;
+		}
+	}
+	
+	/*
+	 * obtener var de request
+	 */
+	public function gReq($var){
+		$v = $this->request->get($var);
+		return $v;
+	}
+	
+	/*
+	 * obtener var de session
+	 */
+	public function gSession($var){
+		$v = $this->session->get($var);
+		return $v;
+	}
+	
+	/*
+	 * set var de session
+	 */
+	public function sSession($var, $valor){
+		$v = $this->session->set($var, $valor);
+		return $v;
+	}
+	
+	/*
+	 * Query generica
+	 */
+	public function query($modelo, $sql){
+		// Execute the query
+		return new Resultset(null, $modelo, $modelo->getReadConnection()->query($sql));
+	}
+	
+	/*
+	 * view function, sets the usual suspects that go into a view
+	 */
+	public function view($titulo, $form = "", $tabla = ""){
+		$this->view->titulo = $this->elemento("h1", ["titulo"], $titulo);
+		$this->view->form = $form;
+		$this->view->tabla = $tabla;
+	}
 }
