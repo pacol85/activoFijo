@@ -831,7 +831,7 @@ td{
     	 
     	//Actualiza el articulo en el inventario
     	$i = $this->request->getPost("inventario");
-    	$inventario = Inventario::findFirst(array("i_correlativo = '$i'"));
+    	$inventario = Inventario::findFirst(array("i_correlativo like '%$i%'"));
     	$inventario->i_color = $this->request->getPost("color");	
     	$inventario->i_descripcion = $this->request->getPost("desc");
     	$inventario->i_marca = $this->request->getPost("marca");
@@ -924,7 +924,7 @@ td{
     
     	//Actualiza el articulo en el inventario
     	$i = $this->request->getPost("inventario");
-    	$inventario = Inventario::findFirst(array("i_correlativo = '$i'"));
+    	$inventario = Inventario::findFirst(array("i_correlativo like '%$i%'"));
     	$inventario->i_color = $this->request->getPost("color");
     	$inventario->i_descripcion = $this->request->getPost("desc");
     	$inventario->i_marca = $this->request->getPost("marca");
