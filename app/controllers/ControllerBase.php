@@ -113,7 +113,7 @@ class ControllerBase extends Controller
 						}						
 						break;
 					case "m" :
-						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control money", "id" => "$n[0]", "value" => "$n[1]"));
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control number", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
 					case "e" :
 						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control email", "id" => "$n[0]"));

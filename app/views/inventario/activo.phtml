@@ -1,6 +1,9 @@
 <div class="page-header">
     <h1>Activo Fijo</h1>
 </div>
+<?php 
+echo $this->getContent();
+?>
 <script type="text/javascript" language="javascript" class="init">
 	$(document).ready(function() {
 		$('#activos').DataTable({
@@ -32,7 +35,7 @@
 	                }, 0 );
 	 
 	            // Update footer
-	            $( api.column( 4 ).footer() ).html(
+	            $( api.column( 5 ).footer() ).html(
 	                'Valor Adquisi&oacute;n por hoja: $'+pageTotal.toFixed(2) +' (Total: $'+ total.toFixed(2) + ')'
 	            );
 	        }
@@ -51,7 +54,8 @@
 	<th>Valor Adquisici&oacute;n</th>
 	<th>Valor Residual</th>
 	<th>Deprec. Acumulada</th>
-	<th>Pend. Depreciar</th>	
+	<th>Pend. Depreciar</th>
+	<th>Acciones</th>	
 </tr></thead>
 <tfoot>
 	<tr>
@@ -83,6 +87,8 @@
 		echo "<td>$ ".number_format($bien->i_vresidual,2)."</td>";
 		echo "<td>$ ".number_format($bien->i_dacumulada,2)."</td>";
 		echo "<td>$ ".number_format($bien->i_penddepreciar,2)."</td>";
+		$cb = new ControllerBase();
+		echo "<td>".$cb->a(1, "inventario/editInventario", "Editar", [["id",$bien->i_id]])."</td>";
 		echo "</tr>";
 	}
 ?>

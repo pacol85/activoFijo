@@ -289,6 +289,66 @@ class InventarioController extends ControllerBase
     			"controller" => "inventario",
     			"action" => "correlativos"
     	));
-    }    
+    }
+    
+    public function editInventarioAction(){
+    	 $id = parent::gReq("id");
+    	 $i = Inventario::findFirst("i_id = '$id'");
+    	 $user = "";
+    	 $ubic = "";
+    	 if($i->u_id != null && $i->u_id != ""){
+    	 	$usuario = Usuarios::findFirst("u_id = $i->u_id");
+    	 	$user = $usuario->u_lanid;
+    	 }else{
+    	 	$ubicacion = Ubicacion::findFirst("ub_id = $i->ubicid");
+    	 	$ubic = $ubicacion->ub_nombre;
+    	 }
+    	 
+    	 $campos = [
+    	 		["tv", ["desc", $i->i_descripcion], "Descripci&oacute;n"],
+    	 		["d", ["fing", $i->i_fingreso], "Fecha Ingreso"],
+    	 		["m", ["va", $i->i_vadquisicion], "valor Adquisici&oacute;n"],
+    	 		["sel", ["encontrado", ["1" => "Verdadero", "0" => "Falso"], $i->i_encontrado], "Encontrado"],
+    	 		["tv", ["ubict", $i->i_ubicacion], "Encontrado en"],
+    	 		["tv", ["obs", $i->i_observaciones], "Observaciones"],    	 		
+    	 		["tv", ["user", $user], "Usuario", 1],
+    	 		["tv", ["ubic", $ubic], "Ubicaci&oacute;n", 1],
+    	 		["tv", ["tipo", $i->i_tipo], "Tipo"],
+    	 		["tv", ["marca", $i->i_marca], "Marca"],
+    	 		["tv", ["mod", $i->i_modelo], "Modelo"],
+    	 		["tv", ["serie", $i->i_serie], "Serie"],
+    	 		["tv", ["color", $i->i_color], "Color"],
+    	 		["tv", ["otros", $i->i_otros], "Otros"],
+    	 		["tv", ["prov", $i->i_proveedor], "Proveedor"],
+    	 		["h", ["id"], $id],
+    	 		["s", ["guardar"], "Guardar"]
+    	 ];
+    	 
+    	 $form = parent::form($campos, "inventario/guardar", "form1");
+    	 parent::view("Inventario con Correlativo: $i->i_correlativo", $form);
+    }
+    
+    public function guardarAction(){
+    	$id = parent::gPost("id");
+    	$i = Inventario::findFirst("i_id = $id");
+    	$i->i_descripcion = parent::gPost("desc");
+    	$i->i_encontrado = parent::gPost("encontrado");
+    	$i->i_ubicacion = parent::gPost("ubict");
+    	$i->i_observaciones = parent::gPost("obs");
+    	$i->i_tipo = parent::gPost("tipo");
+    	$i->i_marca = parent::gPost("marca");
+    	$i->i_modelo = parent::gPost("mod");
+    	$i->i_serie = parent::gPost("serie");
+    	$i->i_color = parent::gPost("color");
+    	$i->i_otros = parent::gPost("otros");
+    	$i->i_proveedor = parent::gPost("prov");
+    	if($i->update()){
+    		parent::msg("Actualizaci&oacute;n de datos exitosa para correlativo: $i->i_correlativo", "s");
+    	}else{
+    		parent::msg("Ocurri&oacute; un error durante la transacci&oacute;n");
+    	}
+    	parent::forward("inventario", "activo");
+    	
+    }
 
 }
