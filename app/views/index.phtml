@@ -62,10 +62,10 @@
 		if($usuario != null && $usuario != ""){
 			$texto = armaMenu($usuario);
 			$u = Usuarios::findFirst($usuario);
-			if(!$this->security->checkHash('fakePass', $u->u_contrasena)){
+			$p = Parametros::findFirst("p_parametro = 'initialPass'");
+			if($p->p_valor != $u->u_contrasena){
 				echo $texto;
-			}
-						
+			}						
 		}else{
 			$homepage = "/activoFijo/";
 			$currentpage = $_SERVER['REQUEST_URI'];

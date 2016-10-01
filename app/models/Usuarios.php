@@ -1,5 +1,7 @@
 <?php
 
+use Phalcon\Mvc\Model\Validator\Email as Email;
+
 class Usuarios extends \Phalcon\Mvc\Model
 {
 
@@ -80,12 +82,35 @@ class Usuarios extends \Phalcon\Mvc\Model
      * @var string
      */
     public $r_id;
-    
+
     /**
      *
      * @var string
      */
     public $email;
+
+    /**
+     * Validations and business logic
+     *
+     * @return boolean
+     */
+    public function validation()
+    {
+        $this->validate(
+            new Email(
+                array(
+                    'field'    => 'email',
+                    'required' => true,
+                )
+            )
+        );
+
+        if ($this->validationHasFailed() == true) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Initialize method for model.
@@ -99,6 +124,8 @@ class Usuarios extends \Phalcon\Mvc\Model
         $this->hasMany('u_id', 'Formulario', 'f_elaboradopor', array('alias' => 'Formulario'));
         $this->hasMany('u_id', 'Formulario', 'f_unuevo', array('alias' => 'Formulario'));
         $this->hasMany('u_id', 'Inventario', 'u_id', array('alias' => 'Inventario'));
+        $this->hasMany('u_id', 'Solicitudes', 'usuario', array('alias' => 'Solicitudes'));
+        $this->hasMany('u_id', 'Solicitudes', 'tecnico', array('alias' => 'Solicitudes'));
         $this->belongsTo('d_id', 'Departamento', 'd_id', array('alias' => 'Departamento'));
         $this->belongsTo('r_id', 'Roles', 'r_id', array('alias' => 'Roles'));
     }

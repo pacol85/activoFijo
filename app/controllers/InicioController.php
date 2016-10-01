@@ -10,8 +10,7 @@ class InicioController extends ControllerBase {
 					)
 			);
 		}
-		//$usuario = $this->session->get("usuario");
-		//echo "Bienvenido/a $usuario";
+		
 	}
 	
 	public function salirAction(){
@@ -49,7 +48,7 @@ class InicioController extends ControllerBase {
 		}else{
 			$u = Usuarios::findFirst($usuario);
 			if(!$this->security->checkHash($op, $u->u_contrasena)){
-				$error = "Contrase&ntilde;a incorrecta";
+				$error = "Contrase&ntilde;a original incorrecta";
 			}
 			if($np != $rp){
 				$error = "Las contrase&ntilde;as no concuerdan";
@@ -60,7 +59,7 @@ class InicioController extends ControllerBase {
 				$error = "Nueva contrase&ntilde;a no cumple con los estandares";
 			}
 			if($error != ""){
-				$this->flashSession->error($error);
+				parent::msg($error);
 				return $this->dispatcher->forward(
 						array(
 								"controller" => "inicio",
@@ -69,8 +68,8 @@ class InicioController extends ControllerBase {
 						);				
 			}else{
 				$u->u_contrasena = $this->security->hash($np);
-				$u->save();
-				$this->flash->success($exito);
+				$u->update();
+				parent::msg($exito, "s");
 				return $this->dispatcher->forward(
 						array(
 								"controller" => "inicio",
@@ -88,58 +87,41 @@ class InicioController extends ControllerBase {
 	
 	public function ingresarAction()
 	{
-		//$this->view->disable();
-		$user = $this->request->get("user");
-		$user = trim($user);
-		$user = strtoupper($user);
-		$pass = $this->request->get("pass");
-		$pass = trim($pass);
-		// Ver si existe el usuario y contraseña
-		$success = Usuarios::find("u_lanid ='$user'");
-		 
-		if ($success->count() < 2 && $success->count() > 0) {
-			$usuario = new Usuarios();
-			$usuario = $success->getFirst();
-	
-			//validar contrasena
-			if($this->security->checkHash($pass, $usuario->u_contrasena)){
-				$this->session->set("usuario", $usuario->u_id);
-				$this->session->set("user_time", time());
-				 
-				if($this->security->checkHash('fakePass', $usuario->u_contrasena)){
-					return $this->dispatcher->forward(
-							array(
-									"controller" => "inicio",
-									"action"     => "newPass"
-							)
-							);
-				}else{
-					return $this->dispatcher->forward(
-							array(
-									"controller" => "inicio",
-									"action"     => "index"
-							)
-							);
-				}
-			}else{
-				$this->flashSession->error("Credenciales suministradas son err&oacute;neas");
-				return $this->dispatcher->forward(
-						array(
-								"controller" => "inicio",
-								"action"     => "retry"
-						)
-						);
-			}
-			 
-		} else {
-			$this->flashSession->error("no existe el usuario");
-			return $this->dispatcher->forward(
-					array(
-							"controller" => "inicio",
-							"action"     => "retry"
-					)
-					);
-		}
+	//$this->view->disable();
+    	$user = $this->request->get("user");
+    	$user = trim($user);
+    	$user = strtoupper($user);
+    	$pass = $this->request->get("pass");
+    	$pass = trim($pass);
+    	// Ver si existe el usuario y contraseña
+    	$success = Usuarios::find("u_lanid ='$user' and u_estado = 1");
+    	
+    	if ($success->count() < 2 && $success->count() > 0) {
+    		$usuario = new Usuarios();
+    		$usuario = $success->getFirst();
+    		
+    		//validar contrasena
+    		if(parent::checkPass($pass, $usuario->u_contrasena)){
+    			$this->session->set("usuario", $usuario->u_id);
+    			if(parent::checkPass($pass, "",true)){
+    				parent::forward("inicio", "newPass");
+    			}else{
+    				parent::forward("inicio", "index");
+    			}
+    		}else{
+    			parent::msg("Credenciales suministradas son err&oacute;neas");
+    			parent::forward("inicio", "retry");
+    		}   		
+    		   		    		
+    	} else {
+    		parent::msg("no existe el usuario");
+    		return $this->dispatcher->forward(
+    				array(
+    						"controller" => "inicio",
+    						"action"     => "retry"
+    				)
+    				);
+    	}
 	}
 }
 ?>

@@ -1,0 +1,25 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#solicitudes').DataTable();
+	$('.edit').hide();		
+});
+
+function guardarCambio(){
+	$('#form1').attr('action', "/activoFijo/ubicacion/editar");
+	$('#form1').submit();
+}
+function cancelar(){
+	$('#form1').attr('action', "/activoFijo/ubicacion/index");
+	$('#form1').submit();
+}
+<?php 
+	echo $this->view->js;
+?>
+</script>
+<?php 
+echo $this->view->titulo;
+echo $this->getContent();
+echo $this->view->form;
+echo $this->view->botones;
+echo $this->view->tabla;
+?>

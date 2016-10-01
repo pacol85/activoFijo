@@ -372,9 +372,82 @@ class ControllerBase extends Controller
 	/*
 	 * view function, sets the usual suspects that go into a view
 	 */
-	public function view($titulo, $form = "", $tabla = ""){
+	public function view($titulo, $form = "", $tabla = "", $botones = []){
 		$this->view->titulo = $this->elemento("h1", ["titulo"], $titulo);
 		$this->view->form = $form;
-		$this->view->tabla = $tabla;
+		$this->view->tabla = $this->ftable($tabla);
+		$boton = "";
+		if(count($botones) > 0){
+			$boton = $this->elemento("bg", [["edit", "guardarCambio()", "Editar"],["cancel", "cancelar()", "Cancelar"]], "");
+			$js = $this->jsCargarDatos($botones[0], ["main"], ["edit"], $botones[1]);
+			$this->view->js = $js.$this->jsBotones($botones[2][0], $botones[2][1], $botones[2][2]);
+		}
+		$this->view->botones = $boton;
+	}
+	/*
+	 * newPass: to generate initial generic password, in this example is pass
+	 */
+	public function newPass(){
+		$pass = Parametros::findFirst("p_parametro = 'initialPass'");
+		return $pass->p_valor;
+	}
+	
+	/*
+	 * checkPass: to compare passwords stored with encryption
+	 */
+	public function checkPass($pass, $comparePass = "", $initial = false){
+		if ($initial){
+			$p = Parametros::findFirst("p_parametro = 'initialPass'");
+			return $this->security->checkHash($pass, $p->p_valor);
+		}else{
+			return $this->security->checkHash($pass, $comparePass);
+		}
+	}
+	
+	/*
+	 * fecha + o - dias (d), meses (m), anios (y)
+	 */
+	public function datePlus($var, $option="d"){
+		$date = date("Y-m-d");
+		$resultado = $this->fechaHoy(false);
+		switch ($option) {
+			case "m":
+				$mod_date = strtotime($date.$var." months");
+				$resultado = date("Y-m-d",$mod_date);
+				break;
+			case "y":
+				$mod_date = strtotime($date.$var." years");
+				$resultado = date("Y-m-d",$mod_date);
+				break;
+			default:
+				$mod_date = strtotime($date.$var." days");
+				$resultado = date("Y-m-d",$mod_date);
+				break;
+		}
+		return $resultado;
+	}
+	
+	/*
+	 * Limpiar campos
+	 */
+	public function limpiar(){
+		$this->tag->resetInput();
+	}
+	
+	/*
+	 * JS para submit de modificacion y cancelar
+	 */
+	public function jsBotones($form, $action1, $action2){
+		$html = "
+			function guardarCambio(){
+				$('#$form').attr('action', '/activoFijo/$action1');
+				$('#$form').submit();
+			}
+			function cancelar(){
+				$('#$form').attr('action', '/activoFijo/$action2');
+				$('#$form').submit();
+			}
+		";
+		return $html;
 	}
 }
