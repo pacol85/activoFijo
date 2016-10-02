@@ -8,4 +8,14 @@ $(document).ready(function() {
 	          event.preventDefault();
 
 	});
+	 
+	$('.corr').keypress(function(event) {
+
+	     if(event.which == 8 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 9 || event.which == 44 || event.which == 103) 
+	          return true;
+
+	     else if(event.which < 48 || event.which > 57)
+	          event.preventDefault();
+
+	});
 });

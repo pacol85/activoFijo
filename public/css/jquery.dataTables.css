@@ -1,11 +1,4 @@
 /*
-Style added by FLOZANO
-*/
-#datatable {
-    font-size: 12px;
-}
-
-/*
  * Table styles
  */
  
@@ -15,6 +8,7 @@ table.dataTable {
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
+  font-size: 0.7em;
   /*
    * Header and footer styles
    */

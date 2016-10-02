@@ -3,13 +3,40 @@ use Phalcon\Flash;
 class InicioController extends ControllerBase {
 	public function indexAction(){
 		if (!($this->session->has("usuario"))){
-			$this->dispatcher->forward(
+			return $this->dispatcher->forward(
 					array(
 							"controller" => "index",
 							"action"     => "index"
 					)
 			);
 		}
+		$usuario = $this->session->get("usuario");
+		$user = Usuarios::findFirst($usuario);
+		
+		$tabla = parent::thead("activos", ["Correlativo", "Descripci&oacute;n", "Ubicaci&oacute;n", "Observaciones"]);
+		$bienesList = Inventario::find("(i_activo = 1 or i_activo = 2) and i_estado = 1 and u_id = '$usuario'");
+		foreach ($bienesList as $bien){
+			$tabla = $tabla.parent::tbody([
+					$bien->i_correlativo, 
+					$bien->i_descripcion,
+					$bien->i_serie,
+					$bien->i_observaciones
+			]);
+		}
+		
+		$sol = Solicitudes::find("tipo like '%Inventario Inicial%'");
+		$form = "";
+		if(count($sol) < 1){
+			$campos = [
+					["h3", ["sol"], "Correlativos que no me pertenecen"],
+					["t", ["corr"], "Correlativos"],
+					["s", [""], "Enviar"]
+			];
+			$form = parent::form($campos, "inicio/solicitud", "form1");
+		}
+		
+		$this->view->h2 = parent::elemento("h2", "h2", "Activos y Bienes asociados al usuario");
+		parent::view("Bienvenido/a $user->u_nombre $user->u_apellido", $form, $tabla);
 		
 	}
 	
@@ -122,6 +149,38 @@ class InicioController extends ControllerBase {
     				)
     				);
     	}
+	}
+	
+	/*
+	 * Crear Solicitud inicial de inventario
+	 */
+	public function solicitudAction()
+	{
+		$s = parent::gPost("corr");
+		if($s == "" or $s == null){
+			parent::msg("No se puede quedar en blanco el campo de correlativos, como m&icaute;nimo colocar 0 si no hay cambios");
+			return parent::forward("inicio", "index");
+		}
+		
+		$sol = new Solicitudes();
+		$sol->descripcion = $s;
+		$sol->fapertura = parent::fechaHoy(true);
+		$sol->resumen = "Inventario erroneo";
+		
+		//el tecnico es el administrador del sistema
+		$tec = Parametros::findFirst("p_parametro = 'administrador'");
+		$sol->tecnico = $tec->p_valor;
+		$tipo = Tipo::findFirst("tipo like 'Inventario Inicial'");
+		$sol->tipo = $tipo->tipo;
+		$sol->usuario = parent::gSession("usuario");
+		if($sol->save()){
+			parent::msg("Creaci&oacute;n de requerimiento exitoso", "s");
+			parent::forward("inicio", "index");
+		}else{
+			parent::msg("Ocurri&oacute; un error durante la operaci&oacute;n");
+			parent::forward("inicio", "index");
+		}
+		
 	}
 }
 ?>
