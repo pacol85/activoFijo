@@ -29,7 +29,7 @@ class InicioController extends ControllerBase {
 		if(count($sol) < 1){
 			$campos = [
 					["h3", ["sol"], "Correlativos que no me pertenecen"],
-					["t", ["corr"], "Correlativos"],
+					["tc", ["corr", "corr"], "Correlativos"],
 					["s", [""], "Enviar"]
 			];
 			$form = parent::form($campos, "inicio/solicitud", "form1");

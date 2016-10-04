@@ -103,9 +103,9 @@ class ControllerBase extends Controller
 				switch ($t){
 					case "t" :
 						if($r == 1){
-							$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control $n[1]" , "id" => "$n[0]", "readonly" => ""));
+							$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control" , "id" => "$n[0]", "readonly" => ""));
 						}else{
-							$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control $n[1]", "id" => "$n[0]"));
+							$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]"));
 						}						
 						break;
 					case "tv" :
@@ -115,6 +115,9 @@ class ControllerBase extends Controller
 							$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control", "id" => "$n[0]", "value" => "$n[1]"));
 						}						
 						break;
+					case "tc" :
+						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control $n[1]", "id" => "$n[0]"));
+						break;								
 					case "m" :
 						$elem = $elem.$this->tag->textField(array("$n[0]", "size" => 30, "class" => "form-control number", "id" => "$n[0]", "value" => "$n[1]"));
 						break;
