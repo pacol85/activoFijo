@@ -128,13 +128,14 @@ class InicioController extends ControllerBase {
 			$usuario = $success->getFirst();
 
 			//validar contrasena
-			if(parent::checkPass($pass, $usuario->u_contrasena)){
+			//if(parent::checkPass($pass, $usuario->u_contrasena)){
+			if(parent::loginLDAP($user, $pass)){
 				$this->session->set("usuario", $usuario->u_id);
-				if(parent::checkPass($pass, "",true)){
+				/*if(parent::checkPass($pass, "",true)){
 					parent::forward("inicio", "newPass");
-				}else{
+				}else{*/
 					parent::forward("inicio", "index");
-				}
+				//}
 			}else{
 				parent::msg("Credenciales suministradas son err&oacute;neas");
 				parent::forward("inicio", "retry");

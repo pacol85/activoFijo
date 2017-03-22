@@ -1,6 +1,6 @@
 <?php
 // include autoloader
-require_once $config->application->dompdfDir.'/autoload.inc.php';
+////require_once $config->application->dompdfDir.'/autoload.inc.php';
 // reference the Dompdf namespace
 
 use Phalcon\Mvc\Model\Criteria;

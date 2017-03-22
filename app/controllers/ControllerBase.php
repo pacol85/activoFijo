@@ -1,6 +1,7 @@
 <?php
 
 use Phalcon\Mvc\Controller;
+use Adldap\Adldap;
 
 class ControllerBase extends Controller
 {
@@ -154,6 +155,9 @@ class ControllerBase extends Controller
 							$elem = $elem.$this->tag->radioField(array("$n[0]", "value" => "$rb", "id" => "$rb"));
 							$elem = $elem."&nbsp;";
 						}
+						break;
+					case "f" :
+						$elem = $elem.$this->tag->fileField("$n[0]");
 						break;
 				}				
 				$elem = $elem.'</div></div>';
@@ -455,5 +459,30 @@ class ControllerBase extends Controller
 			}
 		";
 		return $html;
+	}
+	
+	/**
+	 * Función para conexión a LDAP, Autenticación
+	 */
+	public function loginLDAP($user, $pass){
+		$config = array(
+				'account_suffix' => "@assanet.com",
+		
+				'domain_controllers' => array("svssdc01.assa.interno"),
+		
+				'base_dn' => 'ou="Usuarios AIG",ou="Salvador AIG",ou="ASSA - EL SALVADOR",dc=assa,dc=interno',
+		
+				'admin_username' => 'flozano',
+		
+				'admin_password' => 'Demon1id',
+		);
+		$ad = new Adldap($config);
+		
+		$result = $ad->authenticate($user, $pass);
+		if($result == 1){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

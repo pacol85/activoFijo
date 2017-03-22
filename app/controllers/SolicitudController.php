@@ -11,32 +11,26 @@ class SolicitudController extends ControllerBase
      */
     public function indexAction()
     {
-    	$this->persistent->parameters = null;
-    	$this->tag->resetInput();
-    	$campos = [
-    			["t", ["nombre"], "Ubicaci&oacute;n"],
-    			["t", ["desc"], "Descripci&oacute;n"],
-    			["h", ["ubid"], ""],
-    			["s", [""], "Crear Ubicacion"]
-    	];
-    	$js = parent::jsCargarDatos(["nombre", "desc", "ubid"], ["main"], ["edit"]);
-    	
-    	$tabla = parent::thead("ubicacion", ["Nombre", "Descripci&oacute;n", "Acciones"]);
-    	$ubic = Ubicacion::find();
-    	foreach ($ubic as $u){
+    	parent::limpiar();
+    	$tabla = parent::thead("solicitudes", ["#", "Usuario", "Inventario err&oacute;neo", "Apertura", "Cierre", "Acciones"]);
+    	$solicitudes = Solicitudes::find();
+    	foreach ($solicitudes as $s){
+    		$user = Usuarios::findFirst("u_id = $s->usuario");
+    		$cerrar = "Cerrar";
+    		if($s->estado == 2){
+    			$cerrar = "Reaperturar";
+    		}
     		$tabla = $tabla.parent::tbody([
-    				$u->ub_nombre,
-    				$u->ub_descripcion,
-    				"<a onClick=\"cargarDatos('".$u->ub_nombre."','".$u->ub_descripcion.
-    				"','$u->ub_id');\">Editar</a>"
+    				$s->id,
+    				$user->u_nombre,
+    				$s->descripcion,
+    				$s->fapertura,
+    				$s->fcierre,
+    				parent::a(2, "solicitud/cerrar/$s->id", $cerrar)
     		]);    		
     	}
     	
-    	$this->view->js = $js;
-        $this->view->titulo = parent::elemento("h1", ["ubic"], "Ubicaci&oacute;n");
-        $this->view->form = parent::form($campos, "ubicacion/crear", "form1");
-        $this->view->botones = parent::elemento("bg", [["edit", "guardarCambio()", "Editar"],["cancel", "cancelar()", "Cancelar"]], "");
-        $this->view->tabla = parent::ftable($tabla);
+    	parent::view("C&oacute;digos err&oacute;neos", "", $tabla);
     }
     
     /**

@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'AIGFutura-Medium';
+  src: url('AIGFutura-Medium.eot');
+  src: url('AIGFutura-Medium.woff2') format('woff2'),
+       url('AIGFutura-Medium.woff') format('woff'),
+       url('AIGFutura-Medium.ttf') format('truetype'),
+       url('AIGFutura-Medium.svg#AIGFutura-Medium') format('svg'),
+       url('AIGFutura-Medium.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
