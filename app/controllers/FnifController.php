@@ -6,15 +6,15 @@ class FnifController extends ControllerBase
 		parent::limpiar();
 		$campos = [
 				["f", ["excel"], "Archivo Excel"],
-				["s", ["mostrar"], "Mostrar"]
+				["s", ["generar"], "Generar XML"]
 		];
 		
-		$form = parent::multiForm($campos, "fnif/mostrar", "form1");
+		$form = parent::multiForm($campos, "fnif/generar", "form1");
 		
-		parent::view("Subir Excel para modificar", $form);
+		parent::view("Excel a XML", $form);
 	}
 
-	public function mostrarAction(){
+	public function generarAction(){
 		if($this->request->hasFiles())
 		{
 			foreach($this->request->getUploadedFiles() as $file)
@@ -44,10 +44,15 @@ class FnifController extends ControllerBase
 		$highestRow = $sheet->getHighestRow();
 		$highestColumn = $sheet->getHighestColumn();
 			
-		$stringTabla = "";
+		$html = "";
 		$titulo = true;
-		$longitud = 0;
-		$fila = 0;
+		
+                $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<rmif 
+	xmlns=\"http://validador.ssf.gob.sv/rmif/informe\" 
+	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n";
+                
+                $xmlEnd = "</rmif>";
 			
 		//Mostrar datos del Excel en una tabla
 			
@@ -63,23 +68,52 @@ class FnifController extends ControllerBase
 				//Imprime fila de t�tulos
 				if ($titulo == true){
 					$titulo = false;
-					continue;
-		
+                                        continue;		
 				}
 				else{
-					$pos = 0;
-					//$nada = false;
-		
-					//$stringTabla += "<tr>";
-					foreach ($row2 as $columna){
-						
-					}
+                                    $xml = $xml . $this->xmlInforme($row2);
 				}
 			}
+                        
 		}
+                
+                $xml = $xml.$xmlEnd;
+                
+                //$file = 'informe.xml';
+                // Write the contents back to the file
+                //file_put_contents($file, $xml);
+                //limpiar
+                $this->view->disable();
+                header('Content-type: text/plain');
+                header('Content-Disposition: attachment; filename="informe.xml"');
+                
+                print $xml;
 	}
+        
+        public function xmlInforme($arreglo) {
+            /*$newArr = [];
+            $i = 0;
+            foreach ($arreglo as $arr) {
+                $newArr[$i] = "". $arreglo;
+                $i++;
+            }*/
+            if($arreglo[1] == "" || $arreglo[1] == null){
+                return "";
+            }
+            $xml = "<informe>
+		<codigo_instrumento>$arreglo[1]</codigo_instrumento>
+		<cotizacion>$arreglo[2]</cotizacion>
+		<valor_nominal>$arreglo[3]</valor_nominal>
+		<inversion>$arreglo[4]</inversion>
+		<activo>$arreglo[5]</activo>
+		<portafolio>$arreglo[6]</portafolio>
+		<intencion>$arreglo[7]</intencion>
+		<gravamen>$arreglo[8]</gravamen>
+            </informe>\n";
+            return $xml;
+        }
 
-	public function eliminarAction($id){
+        public function eliminarAction($id){
 		$menu = Menu::findFirst("id = $id");
 		$items = Item::find("menu = $id");
 		if(count($items) > 0){
